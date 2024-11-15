@@ -36,9 +36,9 @@
         >
       </v-row> -->
 
-      <v-row v-if="localStorageRecordsCount > 0">
+      <!-- <v-row v-if="localStorageRecordsCount > 0">
         <v-col style="color: green"> {{ localStorageRecordsCount }}</v-col>
-      </v-row>
+      </v-row> -->
       <v-row>
         <v-col>
           <v-data-table
