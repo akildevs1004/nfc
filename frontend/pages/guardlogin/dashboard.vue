@@ -186,20 +186,20 @@ export default {
       return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`; // Output: "2024-12-31 02:22:53"
     },
     addAttendanceRecord(record) {
-      const isDuplicate = this.attendanceRecords.some(
-        (new1) =>
-          new1.user_id === record.user_id &&
-          new1.serial_number === record.serial_number &&
-          new1.log_time === record.log_time
-      );
+      // const isDuplicate = this.attendanceRecords.some(
+      //   (new1) =>
+      //     new1.user_id === record.user_id &&
+      //     new1.serial_number === record.serial_number &&
+      //     new1.log_time === record.log_time
+      // );
 
-      if (isDuplicate) {
-        //console.log("Duplicate Found");
+      // if (isDuplicate) {
+      //   //console.log("Duplicate Found");
 
-        this.outputMessage = "Duplicate Found";
+      //   this.outputMessage = "Duplicate Found";
 
-        return; // Exit the method if duplicate is found
-      }
+      //   return; // Exit the method if duplicate is found
+      // }
 
       record.sync_status = record.sync_status ?? "Pending";
       this.attendanceRecords.push(record);
