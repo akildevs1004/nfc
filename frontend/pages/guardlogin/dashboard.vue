@@ -6,9 +6,9 @@
       </v-row>
       <v-row>
         <v-col>
-          <!-- <v-btn color="primary" dense small @click="addAttendance()"
+          <v-btn color="primary" dense small @click="addAttendance()"
             >Manual Entry Tag</v-btn
-          > -->
+          >
           <v-btn dense small @click="startNFCScan" color="primary"
             >Scan Now
           </v-btn>
