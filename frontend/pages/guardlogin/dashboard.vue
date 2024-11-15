@@ -10,9 +10,12 @@
             >Scan NFC Tag
           </v-btn> </v-col
         ><v-col cols="6" class="text-right">
-          <v-icon dense @click="getDatafromApi()" color="primary"
-            >mdi-cached </v-icon
-          ><v-btn @click="syncWithServer" color="primary">Update </v-btn>
+          <v-btn @click="syncWithServer" color="primary">
+            <v-icon dense @click="getDatafromApi()" color="white"
+              >mdi-cached
+            </v-icon>
+            Update
+          </v-btn>
         </v-col>
       </v-row>
       <v-row>
