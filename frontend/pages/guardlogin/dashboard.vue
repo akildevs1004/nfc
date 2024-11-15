@@ -5,22 +5,33 @@
         <v-col> Welcome {{ display_name }}</v-col>
       </v-row>
       <v-row>
+        <v-col cols="6">
+          <v-btn @click="startNFCScan" color="primary"
+            >Scan NFC Tag
+          </v-btn> </v-col
+        ><v-col cols="6" class="text-right">
+          <v-icon dense @click="getDatafromApi()" color="primary"
+            >mdi-cached </v-icon
+          ><v-btn @click="syncWithServer" color="primary">Update </v-btn>
+        </v-col>
+      </v-row>
+      <v-row>
         <v-col>
           <!-- <v-btn color="primary" dense small @click="addAttendance()"
             >Manual Entry
           </v-btn> -->
 
-          <v-btn class="mt-4" dense small @click="startNFCScan" color="primary"
+          <!-- <v-btn class="mt-4" dense small @click="startNFCScan" color="primary"
             >Scan
-          </v-btn>
+          </v-btn> -->
         </v-col>
         <v-col class="text-right">
           <!-- <v-icon dense @click="getDatafromApi()" color="primary"
             >mdi-cached
           </v-icon> -->
-          <v-btn dense small @click="syncWithServer" color="primary"
+          <!-- <v-btn dense small @click="syncWithServer" color="primary"
             >Update to Server</v-btn
-          >
+          > -->
         </v-col>
       </v-row>
       <v-row>
