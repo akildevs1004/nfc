@@ -142,10 +142,11 @@ export default {
       this.attendanceRecords.sort((a, b) => {
         return new Date(b.log_time) - new Date(a.log_time); // Ascending order
       });
-      localStorage.setItem(
-        "attendanceRecords",
-        JSON.stringify(this.attendanceRecords)
-      );
+      if (localStorage)
+        localStorage.setItem(
+          "attendanceRecords",
+          JSON.stringify(this.attendanceRecords)
+        );
     },
     getNowDateformat() {
       const date = new Date();
