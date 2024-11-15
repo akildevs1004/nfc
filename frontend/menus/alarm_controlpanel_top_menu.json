@@ -5,5 +5,12 @@
     "to": "/Settings",
     "menu": "settings",
     "module": "topmenu"
+  },
+  {
+    "icon": "mdi-bell",
+    "title": "Logs",
+    "to": "/guards/logs",
+    "menu": "settings",
+    "module": "topmenu"
   }
 ]

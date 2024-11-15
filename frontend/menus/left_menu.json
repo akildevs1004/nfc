@@ -360,6 +360,7 @@
     "module": "reports",
     "top_menu_name": "reports"
   },
+
   {
     "icon": "mdi-domain",
     "title": "Company",
