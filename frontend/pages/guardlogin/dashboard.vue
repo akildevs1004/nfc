@@ -14,6 +14,9 @@
           </v-btn>
         </v-col>
         <v-col class="text-right">
+          <v-icon dense @click="getDatafromApi()" color="primary"
+            >mdi-cached
+          </v-icon>
           <v-btn dense small @click="syncWithServer" color="primary"
             >Update to Server</v-btn
           >
@@ -69,8 +72,9 @@ export default {
       { text: "#", value: "sno" },
       { text: "NFC Location", value: "nfc_location" },
       { text: "Log Time", value: "log_time" },
-      { text: "Server Time", value: "server_time" },
+
       { text: "Server Status", value: "sync_status" },
+      { text: "Server Time", value: "server_time" },
     ],
     attendanceRecords: [],
     serial_number: "",
@@ -115,9 +119,9 @@ export default {
 
     this.serial_number = "1234";
     this.nfc_location = "GATE1";
-    // setInterval(() => {
-    //   this.syncWithServer();
-    // }, 1000 * 10);
+    setInterval(() => {
+      this.syncWithServer();
+    }, 1000 * 10);
 
     this.getDatafromApi();
   },
@@ -217,7 +221,9 @@ export default {
                 originalRecord.server_time = this.getNowDateformat(); // Update sync status
                 console.log(`Record ${record.id} synced successfully`);
 
-                this.outputMessage = "Log updated to Server Successfully ";
+                this.outputMessage =
+                  "Log updated to Server Successfully at  " +
+                  originalRecord.server_time;
               }
             } else {
               console.error("Sync failed for record", record.id);
@@ -352,7 +358,11 @@ export default {
                 )
             ),
           ];
-
+          // Remove duplicates based on log_time
+          this.attendanceRecords = this.attendanceRecords.filter(
+            (record, index, self) =>
+              index === self.findIndex((r) => r.log_time === record.log_time)
+          );
           this.attendanceRecords.sort((a, b) => {
             return new Date(b.log_time) - new Date(a.log_time); // Ascending order
           });
@@ -361,7 +371,7 @@ export default {
         }
       } catch (error) {
         console.error("Error fetching guard tracking logs:", error);
-        this.outputMessage = "Failed to fetch guard tracking logs.";
+        // this.outputMessage = "Failed to fetch guard tracking logs.";
       }
       this.loading = false;
     },
