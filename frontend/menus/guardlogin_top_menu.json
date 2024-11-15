@@ -5,13 +5,5 @@
     "to": "/technician/dashboard",
     "menu": "technician_dashboard",
     "module": "topmenu"
-  },
-
-  {
-    "icon": "mdi-home",
-    "title": "Report",
-    "to": "/technician/tickets",
-    "menu": "technician_tickets",
-    "module": "topmenu"
   }
 ]
