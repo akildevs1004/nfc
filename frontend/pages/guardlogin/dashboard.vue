@@ -15,9 +15,9 @@
           </v-btn>
         </v-col>
         <v-col class="text-right">
-          <v-icon dense @click="getDatafromApi()" color="primary"
+          <!-- <v-icon dense @click="getDatafromApi()" color="primary"
             >mdi-cached
-          </v-icon>
+          </v-icon> -->
           <v-btn dense small @click="syncWithServer" color="primary"
             >Update to Server</v-btn
           >
