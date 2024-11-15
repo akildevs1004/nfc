@@ -2,7 +2,7 @@
   <div>
     <v-card>
       <v-row>
-        <v-col> Welcome Guard1</v-col>
+        <v-col> Welcome {{ display_name }}</v-col>
       </v-row>
       <v-row>
         <v-col>
@@ -98,6 +98,7 @@ export default {
     date_from: null,
     date_to: null,
     refreshData: true,
+    display_name: "",
   }),
   computed: {},
   mounted() {
@@ -130,6 +131,8 @@ export default {
     }, 1000 * 10);
 
     this.getDatafromApi();
+    this.display_name =
+      this.$auth.user.first_name + " " + this.$auth.user.last_name;
   },
   watch: {},
   methods: {
