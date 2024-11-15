@@ -6,9 +6,9 @@
       </v-row>
       <v-row>
         <v-col>
-          <v-btn color="primary" dense small @click="addAttendance()"
+          <!-- <v-btn color="primary" dense small @click="addAttendance()"
             >Manual Entry
-          </v-btn>
+          </v-btn> -->
 
           <v-btn class="mt-4" dense small @click="startNFCScan" color="primary"
             >Scan
