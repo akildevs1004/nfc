@@ -6,9 +6,9 @@
       </v-row>
       <v-row>
         <v-col>
-          <!-- <v-btn color="primary" dense small @click="addAttendance()"
+          <v-btn color="primary" dense small @click="addAttendance()"
             >Manual Entry
-          </v-btn> -->
+          </v-btn>
 
           <v-btn class="mt-4" dense small @click="startNFCScan" color="primary"
             >Scan
@@ -35,6 +35,10 @@
           >Log Recorded Successfully at 12:15 PM</v-col
         >
       </v-row> -->
+
+      <v-row v-if="localStorageRecordsCount > 0">
+        <v-col style="color: green"> {{ localStorageRecordsCount }}</v-col>
+      </v-row>
       <v-row>
         <v-col>
           <v-data-table
@@ -80,8 +84,10 @@ export default {
       { text: "Server Status", value: "sync_status" },
       { text: "Server Time", value: "server_time" },
     ],
+    localStorageRecordsCount: 0,
     attendanceRecords: [],
     attendanceRecordsTable: [],
+    dataController: null, // To store the current AbortController instance
 
     serial_number: "",
     nfc_location: "---",
@@ -128,6 +134,11 @@ export default {
     this.nfc_location = "---";
     setInterval(() => {
       this.syncWithServer();
+      //this.startNFCScan();
+
+      const storedRecords = localStorage.getItem("attendanceRecords");
+      let attendanceRecords = storedRecords ? JSON.parse(storedRecords) : [];
+      this.localStorageRecordsCount = attendanceRecords.length;
     }, 1000 * 15);
 
     this.getDatafromApi();
@@ -363,6 +374,14 @@ export default {
     },
 
     async getDatafromApi() {
+      // Cancel any ongoing request
+      if (this.dataController) {
+        this.dataController.abort();
+      }
+
+      // Create a new AbortController for the current request
+      this.dataController = new AbortController();
+
       this.loading = true;
       try {
         const { data } = await this.$axios.get(`guard_tracking_logs`, {
@@ -371,10 +390,10 @@ export default {
             company_id: this.$auth.user.company_id,
             user_id: this.$auth.user.id,
           },
+          signal: this.dataController.signal, // Attach the AbortController's signal
         });
 
         if (data && data.data) {
-          // Map and transform the API data to the desired structure
           const mappedRecords = data.data.map((element) => ({
             id: new Date(element.log_time).getTime(),
             user_id: element.user_id,
@@ -384,7 +403,6 @@ export default {
             sync_status: "Updated",
           }));
 
-          // Append the mapped records to the existing attendanceRecords
           this.attendanceRecordsTable = [
             ...this.attendanceRecords,
             ...mappedRecords.filter(
@@ -399,10 +417,14 @@ export default {
           console.warn("No records returned from the API.");
         }
       } catch (error) {
-        console.error("Error fetching guard tracking logs:", error);
-        // this.outputMessage = "Failed to fetch guard tracking logs.";
+        if (error.name === "AbortError") {
+          console.log("Previous request canceled.");
+        } else {
+          console.error("Error fetching guard tracking logs:", error);
+        }
+      } finally {
+        this.loading = false;
       }
-      this.loading = false;
     },
 
     optimiseTable() {
