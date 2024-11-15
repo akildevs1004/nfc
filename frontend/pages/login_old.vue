@@ -122,7 +122,7 @@
             </div>
             <h3 class="pb-7 pt-15">
               Welcome To
-              <span style="font-size: 20px"> Alarm Control Panel </span>
+              <span style="font-size: 20px"> Guard Tracking System </span>
             </h3>
           </div>
           <div>
@@ -241,9 +241,9 @@
         class="hide-on-mobile d-none d-lg-flex"
       >
         <div class="about-content">
-          <h3>About Alarm Control Panel</h3>
+          <h3>About Guard Tracking System</h3>
           <div style="font-weight: 300">
-            An Alarm Control Panel (ACP) is a central component in security
+            An Guard Tracking System (ACP) is a central component in security
             systems designed to monitor and control alarms for various
             emergencies, including burglary, fire, smoke, medical issues, and
             temperature-related incidents. Here's a brief overview of each
@@ -251,7 +251,7 @@
           </div>
           <h3 class="pt-10">Features</h3>
           <ul style="font-weight: 300">
-            <li>Alarm Control Panel</li>
+            <li>Guard Tracking System</li>
 
             <li>Burglary Alarm</li>
             <li>Fire Alarm</li>

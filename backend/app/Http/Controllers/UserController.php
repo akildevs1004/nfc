@@ -23,6 +23,8 @@ class UserController extends Controller
 
             $validatedData["name"] = $request->name ?? 'Hello';
             $validatedData["password"] = Hash::make($validatedData["password"]);
+
+            return $validatedData;
             return User::create($validatedData) ? true : false;
         } catch (\Throwable $th) {
             throw $th;
@@ -34,11 +36,16 @@ class UserController extends Controller
         $model = $this->FilterCompanyList($model, $request);
 
         $model->where("role_id", "!=", 1);
-        $model->where("user_type", "company");
+        //$model->where("user_type", "company");
         // $model->whereHas("role", function ($q) {
         //     return $q->where('name', '!=', "company");
         // });
 
+        if ($request->filled("user_type")) {
+            $model->where("user_type", $request->user_type);
+        } else {
+            $model->where("user_type", "company");
+        }
         $model->with("role");
 
         return $model->paginate($request->per_page);
@@ -183,12 +190,14 @@ class UserController extends Controller
 
 
             if ($isExist && $isExist->id !=  $request->editId) {
-                return ["status" => false, "errors" => ["email" => ["User Email already exists111111"]]];
+                return ["status" => false, "errors" => ["email" => ["User Email already exists "]]];
             }
             $this->updateUser($request, $data);
             return $this->response('User account details are updated', null, true);
         } else {
-            if ($isExist) return ["status" => false, "errors" => ["email" => ["User Email already exists22222"]]];
+
+
+            if ($isExist) return ["status" => false, "errors" => ["email" => ["User Email already exists "]]];
             $record = $this->createUser($request, $data);
             return $this->response('User account is created.', $record, true);
         }
@@ -203,6 +212,8 @@ class UserController extends Controller
             'editId' => 'nullable',
             'first_name' => 'required',
             'last_name' => 'required',
+
+            'user_type' => "nullable",
             'email' => 'required',
             'contact_number' => 'required',
             'password' => $request->editId ? 'nullable' : 'required',
@@ -230,7 +241,7 @@ class UserController extends Controller
     {
         $userData = [
             "user_type" => "company",
-            "role_id" => $request->role_id,
+            "role_id" => $request->role_id ?? 0,
             'name' => "{$request->first_name} {$request->last_name}",
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
@@ -249,9 +260,11 @@ class UserController extends Controller
     private function createUser($request, $data)
     {
 
+
+
         return User::create([
-            "user_type" => "company",
-            "role_id" => $request->role_id,
+            "user_type" =>  $data['user_type'] ?? "company",
+            "role_id" => $request->role_id ?? 0,
             'name' => "{$request->first_name} {$request->last_name}",
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,

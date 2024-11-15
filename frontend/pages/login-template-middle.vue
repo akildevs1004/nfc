@@ -127,7 +127,7 @@
                           <h3 class="pb-7 pt-15">
                             Welcome To
                             <span style="font-size: 20px">
-                              Alarm Control Panel
+                              Guard Tracking System
                             </span>
                           </h3>
                         </div>
@@ -251,17 +251,18 @@
                           color: #fff;
                         "
                       >
-                        <h3>About Alarm Control Panel</h3>
+                        <h3>About Guard Tracking System</h3>
                         <div style="font-weight: 300">
-                          Alarm Control Panel is an innovative and comprehensive
-                          platform meticulously crafted to redefine how
-                          organizations approach workforce management. It serves
-                          as the ultimate solution, seamlessly amalgamating
-                          cutting-edge automation with an acute understanding of
-                          employee needs. Tailored to cater to both employees
-                          and HR professionals, it encompasses a myriad of
-                          functionalities designed to optimize time attendance
-                          management and enhance workplace experiences.
+                          Guard Tracking System is an innovative and
+                          comprehensive platform meticulously crafted to
+                          redefine how organizations approach workforce
+                          management. It serves as the ultimate solution,
+                          seamlessly amalgamating cutting-edge automation with
+                          an acute understanding of employee needs. Tailored to
+                          cater to both employees and HR professionals, it
+                          encompasses a myriad of functionalities designed to
+                          optimize time attendance management and enhance
+                          workplace experiences.
                         </div>
                         <h3 class="pt-5">Features</h3>
                         <ul style="font-weight: 300">

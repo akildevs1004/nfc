@@ -1,46 +1,23 @@
 <template>
-  <div v-if="can(`change_request`)">
+  <NoAccess v-if="!$pagePermission.can('users_view', this)" />
+  <div v-else>
     <div class="text-center ma-2">
       <v-snackbar v-model="snackbar" top="top" elevation="24">
         {{ response }}
       </v-snackbar>
     </div>
-    <v-dialog v-model="dialogSecurityCustomers" max-width="800px">
+
+    <v-dialog v-model="newSecurityDialog" max-width="700px">
       <v-card>
         <v-card-title dark class="popup_background_noviolet">
-          <span dense style="color: black"> Add Customers Access</span>
+          <span dense> {{ editId ? "Update" : "New" }} Guard Account</span>
           <v-spacer></v-spacer>
-          <v-icon style="color: black" @click="closeSecurityDialog()" outlined>
+          <v-icon @click="newSecurityDialog = false" outlined>
             mdi mdi-close-circle
           </v-icon>
         </v-card-title>
         <v-card-text>
-          <!-- <SecurityCustomersList
-            :key="key"
-            :security_id="security_id"
-            :security="item"
-            @closeDialog="closeSecurityDialog"
-          /> -->
-        </v-card-text>
-      </v-card>
-    </v-dialog>
-    <v-dialog v-model="newSerialNumberDialog" max-width="800px">
-      <v-card>
-        <v-card-title dark class="popup_background_noviolet">
-          <span dense style="color: black">
-            {{ editId ? "Update" : "New" }} Device Serial Number</span
-          >
-          <v-spacer></v-spacer>
-          <v-icon
-            style="color: black"
-            @click="newSerialNumberDialog = false"
-            outlined
-          >
-            mdi mdi-close-circle
-          </v-icon>
-        </v-card-title>
-        <v-card-text>
-          <EditSerialNumbers
+          <EditUser
             :key="key"
             :editId="editId"
             :item="item"
@@ -56,9 +33,7 @@
         <v-card elevation="0" class="mt-2">
           <v-toolbar class="mb-2 white--text" color="white" dense flat>
             <v-toolbar-title>
-              <span style="color: black">
-                Device Serial Numbers</span
-              ></v-toolbar-title
+              <span style="color: black">Guards</span></v-toolbar-title
             >
             <!-- <v-tooltip top color="primary">
                 <template v-slot:activator="{ on, attrs }"> -->
@@ -85,7 +60,7 @@
                 class="employee-schedule-search-box"
                 @input="getDataFromApi()"
                 v-model="commonSearch"
-                label="Search "
+                label="Search (min 3)"
                 dense
                 outlined
                 type="text"
@@ -96,6 +71,7 @@
             ></span>
 
             <v-btn
+              v-if="can('users_create')"
               title="Change Request"
               x-small
               :ripple="false"
@@ -136,23 +112,65 @@
                   : ""
               }}
             </template>
-
-            <template v-slot:item.assignedcustomer="{ item }">
-              {{ item.customer_id > 0 ? "Assigned" : "---" }}
+            <template
+              v-slot:item.first_name="{ item, index }"
+              style="width: 300px"
+            >
+              <v-row no-gutters>
+                <v-col
+                  style="
+                    padding: 5px;
+                    padding-left: 0px;
+                    width: 50px;
+                    max-width: 50px;
+                  "
+                >
+                  <v-img
+                    style="
+                      border-radius: 50%;
+                      height: 50px;
+                      width: 50px;
+                      max-width: 50px;
+                    "
+                    :src="
+                      item.profile_picture
+                        ? item.profile_picture
+                        : '/no-profile-image.jpg'
+                    "
+                  >
+                  </v-img>
+                </v-col>
+                <v-col style="padding: 10px">
+                  <div style="font-size: 13px">
+                    {{
+                      item.first_name
+                        ? item.first_name + " " + item.last_name
+                        : ""
+                    }}
+                  </div>
+                </v-col>
+              </v-row>
             </template>
 
-            <template v-slot:item.assignedcompany="{ item }">
-              {{ item.company?.name || "---" }}
+            <template v-slot:item.contact_number="{ item }">
+              {{ item.contact_number }}
+            </template>
+            <template v-slot:item.email="{ item }">
+              {{ item.email || "---" }}
             </template>
             <template v-slot:item.status="{ item }">
-              <div v-if="item.live_device?.status_id == 1">
-                <v-img style="width: 30px" src="/icons/device_status_open.png">
-                </v-img>
-              </div>
-              <div v-else>
-                <v-img width="30px" src="/icons/device_status_close.png">
-                </v-img>
-              </div>
+              <img
+                v-if="item.web_login_access == 1"
+                title="Active"
+                style="width: 60px"
+                src="/on.png"
+              />
+              <img
+                v-else-if="item.web_login_access == 0"
+                title="Inactive"
+                style="width: 60px"
+                src="/off.png"
+              />
             </template>
             <template v-slot:item.options="{ item }">
               <v-menu bottom left>
@@ -162,25 +180,22 @@
                   </v-btn>
                 </template>
                 <v-list width="120" dense>
-                  <v-list-item
-                    v-if="can('device_notification_contnet_view')"
-                    @click="viewItem(item)"
-                  >
+                  <v-list-item v-if="can('users_view')" @click="viewItem(item)">
                     <v-list-item-title style="cursor: pointer">
                       <v-icon color="secondary" small> mdi-eye </v-icon>
                       View
                     </v-list-item-title>
                   </v-list-item>
 
-                  <v-list-item @click="editItem(item)">
+                  <v-list-item @click="editItem(item)" v-if="can('users_edit')">
                     <v-list-item-title style="cursor: pointer">
                       <v-icon color="secondary" small> mdi-pencil </v-icon>
                       Edit
                     </v-list-item-title>
                   </v-list-item>
                   <v-list-item
+                    v-if="can('users_delete')"
                     @click="deleteItem(item)"
-                    v-if="!item.customer_id"
                   >
                     <v-list-item-title style="cursor: pointer">
                       <v-icon color="error" small> mdi-delete </v-icon>
@@ -195,15 +210,15 @@
       </v-col>
     </v-row>
   </div>
-  <NoAccess v-else />
 </template>
 
 <script>
-import EditSerialNumbers from "../../../components/master/EditSerialNumbers.vue";
+import EditUser from "../../components/Guards/EditGuard.vue";
 
 export default {
-  layout: "master",
-  components: { EditSerialNumbers },
+  components: {
+    EditUser,
+  },
   data: () => ({
     dialogSecurityCustomers: false,
     editId: null,
@@ -220,7 +235,7 @@ export default {
     tableHeight: 750,
     id: "",
 
-    newSerialNumberDialog: false,
+    newSecurityDialog: false,
     dialogViewCustomer: false,
     totalRowsCount: 0,
 
@@ -230,7 +245,7 @@ export default {
     departments: [],
     Model: "Log",
     security_id: null,
-    endpoint: "master_device_serial_numbers",
+    endpoint: "users",
     payload: {},
     loading: true,
     data: [],
@@ -240,28 +255,23 @@ export default {
         value: "sno",
       },
       {
-        text: "Category/Type",
-        value: "device_type",
+        text: "Name",
+        value: "first_name",
       },
       {
-        text: "Model",
-        value: "model_number",
+        text: "Contact Number",
+        value: "contact_number",
       },
       {
-        text: "Serial Number",
-        value: "serial_number",
-      },
-
-      {
-        text: "  Company",
-        value: "assignedcompany",
+        text: "Email",
+        value: "email",
       },
       {
-        text: "Customer",
-        value: "assignedcustomer",
+        text: "Role",
+        value: "role.name",
       },
       {
-        text: "Live",
+        text: "Status",
         value: "status",
       },
 
@@ -322,6 +332,9 @@ export default {
     },
   },
   methods: {
+    can(per) {
+      return this.$pagePermission.can(per, this);
+    },
     caps(str) {
       if (str == "" || str == null) {
         return "---";
@@ -330,12 +343,7 @@ export default {
         return res.replace(/\b\w/g, (c) => c.toUpperCase());
       }
     },
-    viewCustomers(item) {
-      this.security_id = item.id;
-      this.item = item;
-      this.key += 1;
-      this.dialogSecurityCustomers = true;
-    },
+
     getExpiryDatesCountColor(date) {
       const today = new Date();
 
@@ -351,7 +359,7 @@ export default {
       }
     },
     closeSecurityDialog() {
-      this.newSerialNumberDialog = false;
+      this.newSecurityDialog = false;
       this.dialogSecurityCustomers = false;
       this.getDataFromApi();
     },
@@ -367,7 +375,7 @@ export default {
       this.key += 1;
       this.item = null;
       this.viewCustomerId = null;
-      this.newSerialNumberDialog = true;
+      this.newSecurityDialog = true;
     },
     viewItem(item) {
       this.editId = item.id;
@@ -375,7 +383,7 @@ export default {
       this.viewCustomerId = item.id;
       this.key += 1;
       this.item = item;
-      this.newSerialNumberDialog = true;
+      this.newSecurityDialog = true;
     },
     // viewItem2(item) {
     //   this.$router.push("/alarm/view-customer/" + item.id);
@@ -385,7 +393,7 @@ export default {
       this.editId = item.id;
       this.key += 1;
       this.item = item;
-      this.newSerialNumberDialog = true;
+      this.newSecurityDialog = true;
     },
 
     deleteItem(item) {
@@ -398,19 +406,13 @@ export default {
           },
         };
 
-        this.$axios
-          .delete(`master_device_serial_numbers/${item.id}`, options)
-          .then(({ data }) => {
-            this.snackbar = true;
-            this.response = "Serial Number  Deleted Successfully";
-            this.getDataFromApi();
-            this.loading = false;
-          });
+        this.$axios.delete(`users/delete/${item.id}`).then(({ data }) => {
+          this.snackbar = true;
+          this.response = "Technician  Deleted Successfully";
+          this.getDataFromApi();
+          this.loading = false;
+        });
       }
-    },
-
-    can(per) {
-      return this.$pagePermission.can(per, this);
     },
 
     getDataFromApi(url = "", filter_column = "", filter_value = "") {
@@ -436,6 +438,7 @@ export default {
           common_search: this.commonSearch,
           // branch_id: this.branch_id,
           ...this.payload,
+          user_type: "guard",
         },
       };
       if (filter_column != "")

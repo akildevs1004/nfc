@@ -49,95 +49,162 @@
             </v-col>
 
             <v-col cols="8">
-              <v-row class="pt-0"
-                ><v-col cols="6" dense>
-                  <v-select
-                    class="pb-0"
-                    :readonly="!editable"
-                    :filled="!editable"
-                    hide-details
-                    v-model="payload_serial_number.device_type"
-                    outlined
-                    dense
-                    label="Device Category/Type"
-                    :items="deviceTypes"
-                    item-value="id"
-                    item-text="name"
-                  ></v-select>
-                </v-col>
-
+              <v-row class="pt-0">
                 <v-col cols="6" dense>
-                  <v-select
+                  <v-text-field
+                    label="First Name"
+                    dense
+                    small
+                    outlined
+                    type="text"
+                    v-model="payload_user.first_name"
+                    hide-details
                     :readonly="!editable"
                     :filled="!editable"
-                    class="pb-0"
-                    hide-details
-                    v-model="payload_serial_number.model_number"
-                    outlined
-                    dense
-                    label="Device Model"
-                    :items="deviceModels"
-                  ></v-select>
+                  ></v-text-field>
+                  <span
+                    v-if="primary_errors && primary_errors.first_name"
+                    class="text-danger mt-2"
+                    >{{ primary_errors.first_name[0] }}</span
+                  >
                 </v-col>
                 <v-col cols="6" dense>
                   <v-text-field
-                    label="Serial Number"
+                    label="Last Name"
+                    dense
+                    small
+                    outlined
+                    type="text"
+                    v-model="payload_user.last_name"
+                    hide-details
+                    :readonly="!editable"
+                    :filled="!editable"
+                  ></v-text-field>
+                  <span
+                    v-if="primary_errors && primary_errors.last_name"
+                    class="text-danger mt-2"
+                    >{{ primary_errors.last_name[0] }}</span
+                  >
+                </v-col>
+                <v-col cols="6" dense>
+                  <v-text-field
+                    label="Contact Number"
+                    dense
+                    small
+                    outlined
+                    type="number"
+                    v-model="payload_user.contact_number"
+                    hide-details
+                    :readonly="!editable"
+                    :filled="!editable"
+                  ></v-text-field>
+                  <span
+                    v-if="primary_errors && primary_errors.contact_number"
+                    class="text-danger mt-2"
+                    >{{ primary_errors.contact_number[0] }}</span
+                  >
+                </v-col>
+                <v-col cols="6" dense>
+                  <v-text-field
+                    label="Email ID(Login)"
                     dense
                     small
                     outlined
                     clearable
                     autocomplete="off"
-                    v-model="new_serial_number"
+                    v-model="payload_user.email"
                     hide-details
                     :readonly="!editable"
                     :filled="!editable"
-                    append-icon=" mdi-refresh "
-                    @click:append="generateNewToken()"
                   ></v-text-field>
-
                   <span
-                    v-if="primary_errors && primary_errors.serial_number"
+                    v-if="primary_errors && primary_errors.email"
                     class="text-danger mt-2"
-                    >{{ primary_errors.serial_number[0] }}</span
+                    >{{ primary_errors.email[0] }}</span
                   >
                 </v-col>
                 <v-col cols="6" dense>
-                  <v-autocomplete
-                    v-model="payload_serial_number.company_id"
-                    :items="[{ id: ``, name: `None` }, ...companiesList]"
-                    dense
-                    label="Company"
-                    outlined
-                    hide-details
-                    item-value="id"
-                    item-text="name"
-                    :readonly="!editable"
-                    :filled="!editable"
-                  >
-                  </v-autocomplete>
-                  <span
-                    v-if="primary_errors && primary_errors.company_id"
-                    class="text-danger mt-02"
-                    >{{ primary_errors.company_id[0] }}</span
-                  >
-                </v-col>
-                <v-col cols="12" dense>
                   <v-text-field
-                    label="Description/About Device"
+                    label="Login Password"
+                    :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                    :type="show1 ? 'text' : 'password'"
                     dense
                     outlined
                     clearable
-                    v-model="payload_serial_number.device_description"
+                    v-model="payload_user.password"
                     hide-details
                     @click:append="show1 = !show1"
                     :readonly="!editable"
                     :filled="!editable"
                   ></v-text-field>
                   <span
-                    v-if="errors && errors.device_description"
+                    v-if="errors && errors.password"
                     class="text-danger mt-2"
-                    >{{ errors.device_description[0] }}</span
+                    >{{ errors.password[0] }}</span
                   >
+                </v-col>
+                <v-col cols="6" dense>
+                  <v-text-field
+                    label="Confirm Password"
+                    :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                    dense
+                    small
+                    outlined
+                    clearable
+                    :type="show1 ? 'text' : 'password'"
+                    v-model="payload_user.confirm_password"
+                    hide-details
+                    :readonly="!editable"
+                    :filled="!editable"
+                  ></v-text-field>
+                  <span
+                    v-if="primary_errors && primary_errors.confirm_password"
+                    class="text-danger mt-2"
+                    >{{ primary_errors.confirm_password[0] }}</span
+                  >
+                </v-col>
+
+                <!-- <v-col cols="6">
+                  <v-select
+                    label="User Role"
+                    dense
+                    outlined
+                    v-model="payload_user.role_id"
+                    class="form-select"
+                    placeholder="Select Role"
+                    :items="[{ id: 0, name: 'None' }, ...roles]"
+                    item-value="id"
+                    item-text="name"
+                  >
+                  </v-select>
+                </v-col> -->
+                <v-col cols="6">
+                  <v-row>
+                    <v-col style="max-width: 80px">
+                      <div style="cursor: pointer" v-if="web_login_access == 0">
+                        <v-img
+                          class="ele1"
+                          src="/off.png"
+                          style="width: 60px"
+                          @click="changeStatus(1)"
+                        >
+                        </v-img>
+                      </div>
+                      <div style="cursor: pointer" v-if="web_login_access == 1">
+                        <v-img
+                          class="ele1"
+                          src="/on.png"
+                          style="width: 60px"
+                          @click="changeStatus(0)"
+                        >
+                        </v-img>
+                      </div>
+                    </v-col>
+
+                    <v-col class="pt-8">
+                      <span>Web Login Access</span>
+                    </v-col>
+                  </v-row>
                 </v-col>
               </v-row>
             </v-col>
@@ -166,8 +233,6 @@
 export default {
   props: ["customer_id", "editId", "item", "editable"],
   data: () => ({
-    deviceTypes: [],
-    deviceModels: [],
     show1: false,
     contactTypes: [],
     branchesList: [],
@@ -186,15 +251,11 @@ export default {
     },
     start_date: "",
     end_date: "",
-    payload_serial_number: {
-      device_description: "",
-      model_number: "",
-      device_type: "",
-      serial_number: "",
-      picture: "",
-      company_id: 0,
+    payload_user: {
+      attachment: "",
+      title: "",
+      display_order: "",
     },
-    new_serial_number: "",
 
     e1: 1,
     primary_errors: [],
@@ -209,47 +270,35 @@ export default {
     selectedItem: null,
     items: ["Apple", "Banana", "Orange"],
     web_login_access: 1,
-    companiesList: [],
+    roles: [],
   }),
   created() {
+    this.payload_user.role_id = 0;
+    this.getRoles();
     this.primary_previewImage = null;
-    this.payload_serial_number = {};
+    this.payload_user = {};
     this.preloader = false;
     // this.getBranchesList();
-    this.$axios
-      .get("device_types", {
-        params: {},
-      })
-      .then((data) => {
-        if (data) this.deviceTypes = data.data;
-      });
 
-    this.$axios
-      .get("device_models", {
-        params: {},
-      })
-      .then((data2) => {
-        if (data2) this.deviceModels = data2.data;
-      });
-    this.$axios
-      .get("company/list", {
-        params: {},
-      })
-      .then((data2) => {
-        if (data2) this.companiesList = data2.data;
-      });
+    if (this.$store.state.storeAlarmControlPanel?.AddressTypes) {
+      this.addressTypes = this.$store.state.storeAlarmControlPanel.AddressTypes;
+    }
 
     // setTimeout(() => {
-
+    //console.log(this.editAddressType);
     if (this.editId != "" && this.item) {
-      this.payload_serial_number.editId = this.editId;
-      this.payload_serial_number.company_id = this.item.company_id;
-      this.payload_serial_number.serial_number = this.item.serial_number;
-      this.payload_serial_number.model_number = this.item.model_number;
-      this.payload_serial_number.device_description =
-        this.item.device_description;
-      this.payload_serial_number.device_type = this.item.device_type;
-      this.primary_previewImage = this.item.picture;
+      this.payload_user.editId = this.editId;
+      this.payload_user.user_id = this.item.id;
+      this.payload_user.first_name = this.item.first_name;
+      this.payload_user.last_name = this.item.last_name;
+      this.payload_user.contact_number = this.item.contact_number;
+      this.payload_user.email = this.item.email;
+      this.payload_user.role_id = this.item.role_id;
+      this.web_login_access = this.item.web_login_access || 0;
+      this.payload_user.password = null;
+      this.payload_user.user_type = "guard";
+
+      this.primary_previewImage = this.item.profile_picture;
     }
   },
   methods: {
@@ -257,17 +306,15 @@ export default {
       return this.$pagePermission.can(per, this);
     },
 
-    generateNewToken() {
-      let length = 10;
-      const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-      let token = "XTG"; // Set the prefix here
-
-      for (let i = 0; i < length - 2; i++) {
-        const randomIndex = Math.floor(Math.random() * characters.length);
-        token += characters.charAt(randomIndex);
-      }
-      this.new_serial_number = token;
-      //this.payload_serial_number.serial_number = token;
+    getRoles() {
+      let options = {
+        params: {
+          company_id: this.$auth.user.company_id,
+        },
+      };
+      this.$axios.get(`role`, options).then(({ data }) => {
+        this.roles = data.data;
+      });
     },
     changeStatus(status) {
       if (this.editable) this.web_login_access = status;
@@ -303,24 +350,27 @@ export default {
     submit_primary() {
       let customer = new FormData();
 
-      for (const key in this.payload_serial_number) {
-        if (this.payload_serial_number[key] != "")
-          customer.append(key, this.payload_serial_number[key]);
+      for (const key in this.payload_user) {
+        if (this.payload_user[key] != "")
+          if (this.payload_user[key] != null)
+            customer.append(key, this.payload_user[key]);
       }
-      customer.append("serial_number", this.new_serial_number);
 
       if (this.primary_upload.name) {
         customer.append("attachment", this.primary_upload.name);
       }
 
+      customer.append("company_id", this.$auth.user.company_id);
+      customer.append("user_type", "guard");
       // if (this.editAddressType != "") customer.append("editAddressType", true);
 
       if (this.editId) {
         customer.append("editId", this.editId);
+        customer.append("web_login_access", this.web_login_access);
       }
 
       this.$axios
-        .post("/master_device_serial_numbers", customer)
+        .post("/create_user", customer)
         .then(({ data }) => {
           //this.loading = false;
 
@@ -330,13 +380,7 @@ export default {
             this.color = "red";
 
             this.snackbar = true;
-            this.response = data.message;
-
-            for (let error in data.errors) {
-              if (data.errors.hasOwnProperty(error)) {
-                this.response = data.errors[error][0];
-              }
-            }
+            this.response = "Error occured"; //data.message;
           } else {
             this.color = "background";
             this.primary_errors = [];
@@ -348,16 +392,12 @@ export default {
           }
         })
         .catch((e) => {
-          if (e.response && e.response.data) {
+          if (e.response.data.errors) {
             this.primary_errors = e.response.data.errors;
             this.color = "red";
+
             this.snackbar = true;
             this.response = e.response.data.message;
-            for (let error in e.response.data.errors) {
-              if (e.response.data.errors.hasOwnProperty(error)) {
-                this.response = e.response.data.errors[error][0];
-              }
-            }
           }
         });
     },

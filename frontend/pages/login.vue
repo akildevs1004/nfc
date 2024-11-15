@@ -126,7 +126,7 @@
             </div>
             <!-- <h3 class="pb-5 pt-0" style="font-size: 14px">
               Welcome To
-              <span style="font-size: 14px"> Alarm Control Panel </span>
+              <span style="font-size: 14px"> Guard Tracking System </span>
             </h3> -->
           </div>
           <div style="color: #fff; text-align: left" class="pt-10">
@@ -314,7 +314,7 @@ export default {
     login() {
       this.$store.dispatch("dashboard/resetState");
       this.$store.dispatch("resetState");
-      localStorage.clear();
+      // localStorage.clear();
 
       if (this.$refs.form.validate()) {
         this.$store.commit("email", this.credentials.email);

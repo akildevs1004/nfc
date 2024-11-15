@@ -378,22 +378,7 @@
     "module": "settings",
     "top_menu_name": "settings"
   },
-  {
-    "icon": "mdi-account-tie",
-    "title": "Operators",
-    "to": "/alarm/security",
-    "menu": "device_access",
-    "module": "settings",
-    "top_menu_name": "settings"
-  },
-  {
-    "icon": "mdi-briefcase-account",
-    "title": "Technicians",
-    "to": "/alarm/technicians",
-    "menu": "device_access",
-    "module": "settings",
-    "top_menu_name": "settings"
-  },
+
   {
     "icon": "mdi-lock-outline",
     "title": "Armed",
@@ -411,7 +396,14 @@
     "module": "settings",
     "top_menu_name": "alarm_reports"
   },
-
+  {
+    "icon": "mdi-web-box",
+    "title": "Guards",
+    "open_menu": false,
+    "to": "/guards",
+    "module": "settings",
+    "top_menu_name": "settings"
+  },
   {
     "icon": "mdi-web-box",
     "title": "Admin Users",
@@ -433,6 +425,14 @@
     "title": "Web Logs",
     "open_menu": false,
     "to": "/web_login_logs",
+    "module": "settings",
+    "top_menu_name": "settings"
+  },
+  {
+    "icon": "mdi-web-box",
+    "title": "Guard Logs",
+    "open_menu": false,
+    "to": "/guards/logs",
     "module": "settings",
     "top_menu_name": "settings"
   }

@@ -128,7 +128,7 @@
       >
         <img
           class="logo-image"
-          title="Alarm Control Panel - Xtremeguard"
+          title="Guard Tracking System - Xtremeguard"
           :src="logo_src"
           style="width: 150px !important"
         />

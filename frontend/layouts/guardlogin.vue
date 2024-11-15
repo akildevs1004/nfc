@@ -5,7 +5,6 @@
         {{ response }}
       </v-snackbar>
     </div>
-
     <v-navigation-drawer
       v-if="items.length > 0"
       expand-on-hover
@@ -16,7 +15,7 @@
       fixed
       app
       :color="sideBarcolor"
-      :width="!miniVariant ? '80px!important' : '150px'"
+      :width="150"
     >
       <br />
       <v-list
@@ -36,7 +35,7 @@
           :title="i.title"
         >
           <v-list-item-icon class="ma-2" :title="i.title">
-            <v-icon>{{ i.icon }} </v-icon>
+            <v-icon>{{ i.icon }}</v-icon>
           </v-list-item-icon>
 
           <v-list-item-title class="text-center p-2">
@@ -139,7 +138,7 @@
       <span class="header-menu">
         <template
           v-if="
-            getLoginType == 'company' ||
+            getLoginType == 'technician' ||
             getLoginType == 'branch' ||
             getLoginType == 'department' ||
             ($auth.user?.role?.role_type?.toLowerCase() != 'guard' &&
@@ -164,7 +163,9 @@
                 fill
                 @click="setSubLeftMenuItems(items.menu, items.to)"
               >
-                <b class="header-menu-item"> {{ items.title }} </b>
+                <b class="header-menu-item">
+                  {{ items.title }}
+                </b>
               </v-btn>
             </v-col>
             <!-- <v-col class="header-menu-box">
@@ -242,11 +243,8 @@
       </span>
 
       <v-spacer></v-spacer>
-      <div v-if="$auth && $auth.user?.role_id > 1" style="font-size: 10px">
-        {{ $auth.user.name }}
-      </div>
-      <v-menu
-        style="z-index: 9999 !important"
+      <!-- <v-menu
+        style="z-index: 9999 !important; width: 300px"
         bottom
         origin="center center"
         offset-y
@@ -281,15 +279,14 @@
                 ? 'border-bottom'
                 : ''
             "
-            @click="showPopupAlarmStatus()"
             v-for="(item, index) in notificationsMenuItems"
             :key="index"
           >
-            <v-list-item-content @click="showPopupAlarmStatus()">
+            <v-list-item-content>
               <v-list-item-title class="black--text align-left text-left">
-                <v-row style="">
-                  <v-col cols="2" class="align-right text-right pr-1"
-                    ><img
+                <v-row>
+                  <v-col cols="2" class="align-right text-right pr-1">
+                    <img
                       :src="'/device-icons/' + item.icon"
                       style="width: 20px; vertical-align: middle"
                   /></v-col>
@@ -308,14 +305,14 @@
             </v-list-item-content>
           </v-list-item>
         </v-list>
-      </v-menu>
+      </v-menu> -->
       <v-menu
         nudge-bottom="50"
         transition="scale-transition"
         origin="center center"
         bottom
         left
-        min-width="200"
+        min-width="100"
         nudge-left="20"
       >
         <template v-slot:activator="{ on, attrs }">
@@ -328,8 +325,8 @@
 
         <v-list light nav dense>
           <v-list-item-group color="primary">
-            <v-list-item
-              v-if="$auth && $auth.user?.user_type == 'company'"
+            <!-- <v-list-item
+              v-if="$auth && $auth.user?.user_type == 'technician'"
               @click="goToCompany()"
             >
               <v-list-item-icon>
@@ -340,7 +337,7 @@
                   >Profile</v-list-item-title
                 >
               </v-list-item-content>
-            </v-list-item>
+            </v-list-item> -->
 
             <v-list-item @click="logout">
               <v-list-item-icon>
@@ -365,7 +362,7 @@
       </v-btn>  -->
 
       <!-- <v-btn
-        v-if="getLoginType == 'company' || getLoginType == 'branch'"
+        v-if="getLoginType == 'technician' || getLoginType == 'branch'"
         icon
         plan
         @click="goToSettings()"
@@ -452,7 +449,6 @@
         transition="dialog-top-transition"
         max-width="1000"
         style="z-index: 9999"
-        key="key"
       >
         <!-- <template v-slot:activator="{ on, attrs }">
           <v-btn color="primary" v-bind="attrs" v-on="on">From the top</v-btn>
@@ -481,20 +477,6 @@
                 mdi mdi-close-circle
               </v-icon>
             </v-card-title>
-            <!-- <v-card-title
-              class="error alarm-popup-header"
-              background-color="error"
-              style="
-                text-align: center;
-                padding-left: 35%;
-                color: #fff !important;
-              "
-              >Attention : Alarm Notification(s)
-              <v-spacer></v-spacer>
-              <v-icon color="white" @click="wait5MinutesNextNotification()"
-                >mdi-close-circle-outline</v-icon
-              >
-            </v-card-title> -->
             <v-card-text style="padding-left: 0px">
               <AlarmPopupAllAlarmEvents
                 :items="notificationAlarmDevicesContent"
@@ -504,7 +486,7 @@
                 :alarm_icons="alarm_icons"
               />
               <!-- <v-row
-                v-for="(device, index) in notificationAlarmDevicesContent"
+                v-for="(device, index) in notificationAlarmDevices"
                 :key="index"
               >
                 <v-col cols="2"
@@ -561,12 +543,12 @@
           : 'padding-left: 140px;'
       "
     >
-      <v-container style="max-width: 100%; padding-left: 5px">
+      <v-container style="max-width: 100%">
         <nuxt />
       </v-container>
     </v-main>
 
-    <!-- <v-navigation-drawer
+    <v-navigation-drawer
       v-model="rightDrawer"
       :clipped="true"
       :right="right"
@@ -691,7 +673,7 @@
           </v-card>
         </v-col>
       </v-row>
-    </v-navigation-drawer> -->
+    </v-navigation-drawer>
   </v-app>
 </template>
 
@@ -706,7 +688,7 @@ import company_top_menu from "../menus/company_modules_top.json";
 
 import employee_top_menu from "../menus/employee_modules_top.json";
 
-import controlpanel_top_menu from "../menus/alarm_controlpanel_top_menu.json";
+import controlpanel_top_menu from "../menus/guardlogin_top_menu.json";
 
 import AlarmPopupAllAlarmEvents from "../components/Alarm/PopupAllAlarmEvents.vue";
 
@@ -731,75 +713,24 @@ export default {
       snackbar: false,
       response: "",
       alarm_icons: {},
-
+      cancelRequest: null,
       wait5Minutes: false,
       globalSearchPopupWidth: "500px",
       globalsearch: "",
       globalSearchPopup: false,
       notificationsMenuItems: [],
+      notificationAlarmDevices: {},
       notificationAlarmDevicesContent: {},
       selectedBranchName: "All Branches",
       seelctedBranchId: "",
       branch_id: "",
       menuProperties: {
-        alarm_dashboard: {
-          elevation: 0,
-          selected: "",
-        },
-        alarm_intruderdashboard: {
+        technician_dashboard: {
           elevation: 0,
           selected: "",
         },
 
-        alarm_map: {
-          elevation: 0,
-          selected: "",
-        },
-        alarm_customersmap: {
-          elevation: 0,
-          selected: "",
-        },
-        alarm_allevents: {
-          elevation: 0,
-          selected: "",
-        },
-        alarm_supervisorevents: {
-          elevation: 0,
-          selected: "",
-        },
-        alarm_alarms: {
-          elevation: 0,
-          selected: "",
-        },
-        alarm_customers: {
-          elevation: 0,
-          selected: "",
-        },
-        alarm_reports: {
-          elevation: 0,
-          selected: "",
-        },
-        alarm_security: {
-          elevation: 0,
-          selected: "",
-        },
-        alarm_technicians: {
-          elevation: 0,
-          selected: "",
-        },
-        alarm_armed_reports: {
-          elevation: 0,
-          selected: "",
-        },
-        alarm_tickets: {
-          elevation: 0,
-          selected: "",
-        },
-        alarm_devices: {
-          elevation: 0,
-          selected: "",
-        },
-        settings: {
+        technician_tickets: {
           elevation: 0,
           selected: "",
         },
@@ -843,7 +774,7 @@ export default {
       clipped: true,
 
       miniVariant: true,
-      title: "Guard Tracking System",
+      title: "MyTime2Cloud",
       socket: null,
       logout_btn: {
         icon: "mdi-logout",
@@ -858,10 +789,9 @@ export default {
     };
   },
   created() {
-    if (this.$auth.user.user_type != "company") {
+    if (this.$auth.user.user_type != "guard") {
       try {
         if (window) {
-          alert("You have no Access to this page");
           if (this.$route.name != "logout") window.location.href = "../logout";
           //window.location.reload();
         }
@@ -871,6 +801,11 @@ export default {
       return false;
     }
     this.loadAlarmNotificationIcons();
+    this.getBuildingTypes();
+    this.getAddressTypes();
+    this.getDeviceTypes();
+    this.getSensorTypes();
+    this.getDeviceModels();
 
     this.updateTopmenu();
 
@@ -881,63 +816,53 @@ export default {
     this.logo_src = require("@/static/logo_header.png");
     this.pendingNotificationsCount = 0;
 
-    this.setTopmenuHilighterOnPageReload();
+    this.setTopmenuHilighter();
   },
 
-  async mounted() {
-    // if (!this.$auth.user) {
-    //   this.$router.push("/logout");
-    //   return;
-    // }
+  mounted() {
+    setTimeout(() => {}, 1000 * 10);
 
     setTimeout(() => {
       this.loadHeaderNotificationMenu();
-      //this.verifyPopupAlarmStatus();
+      this.verifyPopupAlarmStatus();
     }, 1000 * 1);
-    await this.getBuildingTypes();
-    await this.getAddressTypes();
-    await this.getDeviceTypes();
-    await this.getSensorTypes();
-
-    await this.getZoneTypes();
-
-    await this.getDeviceModels();
 
     setInterval(() => {
-      if (!this.$route.name.includes("alarm")) return false;
+      if (!this.$route.name.includes("technician")) return false;
       //this.loadHeaderNotificationMenu();
 
       //console.log("wait5Minutes", this.wait5Minutes);
       //if (this.wait5Minutes == false)
-      if (
-        this.$route.name !== "login" &&
-        this.$route.name !== "operator-eventslist" &&
-        this.$route.name !== "operator-dashboard"
-      ) {
-        this.resetTimer();
-        this.loadHeaderNotificationMenu();
+      {
+        if (this.$route.name !== "login") {
+          this.resetTimer();
+          this.loadHeaderNotificationMenu();
 
-        // if (this.$route.name === "alarm-dashboard" && !this.wait5Minutes) {
-        //   const notificationContent = this.notificationAlarmDevicesContent;
+          if (
+            this.$route.name === "technician-dashboard" &&
+            !this.wait5Minutes
+          ) {
+            const notificationContent = this.notificationAlarmDevicesContent;
 
-        //   if (notificationContent && notificationContent.length > 0) {
-        //     let criticalList = notificationContent.filter(
-        //       (notification) => notification.alarm_category == 1
-        //     );
-        //     if (criticalList.length > 0) {
-        //       if (!this.dialogAlarmPopupNotificationStatus) {
-        //         this.popupKey += 1;
-        //         this.dialogAlarmPopupNotificationStatus = true;
-        //       }
-        //     } else {
-        //       //this.dialogAlarmPopupNotificationStatus = false;
-        //     }
-        //   } else {
-        //     this.dialogAlarmPopupNotificationStatus = false;
-        //   }
-        // }
+            if (notificationContent && notificationContent.length > 0) {
+              let criticalList = notificationContent.filter(
+                (notification) => notification.alarm_category == 1
+              );
+              if (criticalList.length > 0) {
+                if (!this.dialogAlarmPopupNotificationStatus) {
+                  this.popupKey += 1;
+                  this.dialogAlarmPopupNotificationStatus = true;
+                }
+              } else {
+                //this.dialogAlarmPopupNotificationStatus = false;
+              }
+            } else {
+              this.dialogAlarmPopupNotificationStatus = false;
+            }
+          }
+        }
       }
-    }, 1000 * 20 * 1);
+    }, 1000 * 5 * 1);
     // setInterval(() => {
     //   if (this.$route.name != "login") {
     //   }
@@ -1018,11 +943,8 @@ export default {
       const profilePicture = "/no-profile-image.jpg";
 
       switch (user.user_type) {
-        case "company": {
-          if (user.role_id > 1) return user.profile_picture;
+        case "company":
           return user.company?.logo || defaultLogo;
-        }
-
         case "master":
           return defaultLogo;
         case "employee":
@@ -1042,6 +964,9 @@ export default {
     },
   },
   methods: {
+    Reset5Minutes() {
+      this.wait5Minutes = false;
+    },
     wait5MinutesNextNotification() {
       this.snackbar = true;
       this.response = "New Alarm will be Display after 5 minutes";
@@ -1053,88 +978,32 @@ export default {
 
       this.dialogAlarmPopupNotificationStatus = false;
     },
-    Reset5Minutes() {
-      this.wait5Minutes = false;
-    },
     wait5MinutesNotification() {
       this.wait5Minutes = true;
       setTimeout(() => {
         this.wait5Minutes = false;
       }, 1000 * 60 * 60);
     },
-    setTopmenuHilighterOnPageReload() {
+    setTopmenuHilighter() {
       const routeMap = {
-        "alarm-map": { name: "alarm_map", path: "/alarm/map" },
-        "alarm-dashboard": {
-          name: "alarm_dashboard",
-          path: "/alarm/dashboard",
+        "technician-tickets": {
+          name: "technician_tickets",
+          path: "/technician/tickets",
         },
-        "alarm-customersmap": {
-          name: "alarm_customersmap",
-          path: "/alarm/customersmap",
-        },
-
-        "alarm-allevents": {
-          name: "alarm_allevents",
-          path: "/alarm/allevents",
-        },
-        "alarm-supervisorevents": {
-          name: "alarm_supervisorevents",
-          path: "/alarm/supervisorevents",
-        },
-        "alarm-reports": { name: "alarm_reports", path: "/alarm/reports" },
-        "alarm-tickets": { name: "alarm_tickets", path: "/alarm/tickets" },
-
-        "alarm-customers": {
-          name: "alarm_customers",
-          path: "/alarm/customers",
-        },
-        "alarm-view-customer-id": {
-          name: "alarm_customers",
-          path: "/alarm/customers",
-        },
-        "alarm-security": {
-          name: "alarm_security",
-          path: "/alarm/security",
-        },
-        "alarm-technicians": {
-          name: "alarm_technicians",
-          path: "/alarm/technicians",
-        },
-
-        "alarm-armedreports": {
-          name: "alarm_armed_reports",
-          path: "/alarm/armedreports",
-        },
-        "alarm-devices": {
-          name: "alarm_devices",
-          path: "/alarm/devices",
-        },
-
-        settings: {
-          name: "settings",
-          path: "/settings",
+        "technician-dashboard": {
+          name: "technician_dashboard",
+          path: "/technician/dashboard",
         },
       };
 
       const defaultRoute = {
-        name: "alarm_intruderdashboard",
-        path: "/alarm/intruderdashboard",
+        name: "technician_dashboard",
+        path: "/technician/dashboard",
       };
 
       const routeConfig = routeMap[this.$route.name] || defaultRoute;
 
       this.setSubLeftMenuItems(routeConfig.name, routeConfig.path, false);
-    },
-    loadAlarmNotificationIcons() {
-      let options = {
-        params: {
-          company_id: this.$auth.user.company_id,
-        },
-      };
-      this.$axios.get(`alarm_notification_icons`, options).then(({ data }) => {
-        this.alarm_icons = data;
-      });
     },
     async getBuildingTypes() {
       if (!this.$store.state.storeAlarmControlPanel?.BuildingTypes) {
@@ -1178,17 +1047,6 @@ export default {
         });
 
         this.$store.commit("storeAlarmControlPanel/SensorTypes", data);
-      }
-    },
-    async getZoneTypes() {
-      if (!this.$store.state.storeAlarmControlPanel?.ZoneTypes) {
-        const { data } = await this.$axios.get("device_zone_types_dropdown", {
-          params: {
-            company_id: this.$auth.user.company_id,
-          },
-        });
-
-        this.$store.commit("storeAlarmControlPanel/ZoneTypes", data);
       }
     },
     async getDeviceTypes() {
@@ -1276,7 +1134,7 @@ export default {
       // Handle inactivity
       this.handleInactivity = () => {
         // Perform actions when the user is inactive
-        this.$router.push(`/alarm/dashboard`);
+        this.$router.push(`/technician/dashboard`);
         // For example, you could redirect the user, show a message, etc.
       };
 
@@ -1314,7 +1172,7 @@ export default {
         params: {
           company_id: this.$auth.user.company_id,
           alarm_status: this.filterAlarmStatus,
-          page_source: "default",
+          pageSource: "layouttechnician2",
         },
         cancelToken: new this.$axios.CancelToken((cancel) => {
           this.cancelRequest = cancel; // Store the cancel function
@@ -1339,9 +1197,7 @@ export default {
                 : "---",
               date_from: element.alarm_start_datetime,
               click: "/alarm/allevents",
-              icon:
-                this.alarm_icons[element.alarm_type] ??
-                element.alarm_type + ".png",
+              icon: this.alarm_icons[element.alarm_type] ?? "---",
               key: "leaves",
             };
 
@@ -1359,41 +1215,116 @@ export default {
           this.isBackendRequestOpen = false;
         });
     },
+    loadAlarmNotificationIcons() {
+      let options = {
+        params: {
+          company_id: this.$auth.user.company_id,
+        },
+      };
+      this.$axios.get(`alarm_notification_icons`, options).then(({ data }) => {
+        this.alarm_icons = data;
+      });
+    },
+    async loadHeaderNotificationTicketMenu() {
+      if (this.isBackendRequestOpen) return false;
 
+      if (!this.$auth.user?.technician?.id) return false;
+
+      this.isBackendRequestOpen = true;
+      this.key = this.key + 1;
+      let company_id = this.$auth.user?.company?.id || 0;
+      if (company_id == 0) {
+        return false;
+      }
+
+      let options = {
+        params: {
+          company_id: this.$auth.user.company_id,
+
+          technician_id: this.$auth.user?.technician?.id || null,
+        },
+      };
+
+      await this.$axios
+        .get(`tickets_unread_notifications`, options)
+        .then(({ data }) => {
+          this.isBackendRequestOpen = false;
+          // this.notificationsMenuItems = [];
+
+          // this.pendingNotificationsCount = data.length;
+
+          data.forEach((element) => {
+            let title = "  ";
+            if (element.customer) {
+              title = title + " Customer: " + element.customer.building_name;
+            }
+            if (element.security) {
+              title =
+                title +
+                " Operator: " +
+                element.security.first_name +
+                " " +
+                element.security.last_name;
+            }
+            // if (element.security) {
+            //   title =
+            //     title +
+            //     " Operator: " +
+            //     element.security.first_name +
+            //     " " +
+            //     element.security.last_name;
+            // }
+            let notificaiton = {
+              title: title,
+              date_from: "",
+              click: "/alarm/allevents",
+              icon: "mail.png",
+              key: "leaves",
+            };
+
+            this.notificationsMenuItems.push(notificaiton);
+          });
+
+          this.pendingNotificationsCount = this.notificationsMenuItems.length;
+        });
+    },
     showPopupAlarmStatus() {
       this.wait5Minutes = false;
       if (!this.dialogAlarmPopupNotificationStatus) {
         this.popupKey += 1;
         this.dialogAlarmPopupNotificationStatus = true;
       }
-
       // this.verifyPopupAlarmStatus();
     },
-    // verifyPopupAlarmStatus() {
-    //   if (this.isBackendRequestOpen) return false;
-    //   this.isBackendRequestOpen = true;
-    //   let company_id = this.$auth.user?.company?.id || 0;
-    //   if (company_id == 0) {
-    //     return false;
-    //   }
-    //   let options = {
-    //     params: {
-    //       company_id: company_id,
-    //     },
-    //   };
-    //   this.$axios
-    //     .get(`get_alarm_notification_display`, options)
-    //     .then(({ data }) => {
-    //       this.isBackendRequestOpen = false;
-    //       if (data.length > 0) {
-    //         this.notificationAlarmDevicesContent = data;
+    verifyPopupAlarmStatus() {
+      if (this.isBackendRequestOpen) return false;
+      this.isBackendRequestOpen = true;
+      let company_id = this.$auth.user?.company?.id || 0;
+      if (company_id == 0) {
+        return false;
+      }
+      let options = {
+        params: {
+          company_id: company_id,
+          pageSource: "layouttechnician",
+        },
+      };
+      this.$axios
+        .get(`get_alarm_notification_display`, options)
+        .then(({ data }) => {
+          this.isBackendRequestOpen = false;
+          if (data.length > 0) {
+            this.notificationAlarmDevices = data;
 
-    //         this.dialogAlarmPopupNotificationStatus = true;
-    //       } else {
-    //         this.dialogAlarmPopupNotificationStatus = false;
-    //       }
-    //     });
-    // },
+            if (!this.dialogAlarmPopupNotificationStatus) {
+              this.popupKey += 1;
+              this.dialogAlarmPopupNotificationStatus = true;
+            }
+          } else {
+            this.dialogAlarmPopupNotificationStatus = false;
+          }
+        });
+    },
 
     getBranchName() {
       return this.$auth.user.branch_name;
@@ -1427,15 +1358,6 @@ export default {
         this.menuProperties[menu_name].elevation = 0;
         this.menuProperties[menu_name].selected = bgColor;
       }
-
-      console.log("menu_name", menu_name);
-
-      // console.log(
-      //   this.menuProperties,
-      //   menu_name,
-      //   this.menuProperties.hasOwnProperty(menu_name)
-      // );
-
       //alarm menu select color
       if (this.menuProperties.hasOwnProperty(menu_name)) {
         for (const key in this.menuProperties) {
@@ -1450,7 +1372,6 @@ export default {
     },
 
     setMenus() {
-      //left menu sub menu
       // this.items = this.company_menus.filter(
       //   (item) => item.module === this.topMenu_Selected
       // );
@@ -1642,11 +1563,6 @@ header,
 </style>
 
 <style>
-.table-td-padding-10 td,
-.table-td-padding-10 th {
-  padding: 5px !important;
-}
-
 .violet {
   background-color: #6946dd;
 }
@@ -1729,9 +1645,6 @@ header,
   padding: 5px 6px 5px !important;
   color: black !important;
 }
-.popup_background_noviolet button {
-  color: black !important;
-}
 .v-dialog > .v-card > .popup_background_white {
   background-color: #fff !important  ;
   padding: 5px 6px 5px !important;
@@ -1742,18 +1655,6 @@ header,
 }
 .popup_background_noviolet .v-tabs-bar {
   background-color: #ecf0f4 !important;
-}
-.popup_background_noviolet .v-card__title,
-.popup_background_noviolet button {
-  color: black;
-}
-.v-dialog > .v-card > .popup_background_red {
-  background-color: red !important  ;
-  padding: 5px 6px 5px !important;
-  color: #fff !important;
-}
-.popup_background_red .v-tabs-bar {
-  background-color: red !important;
 }
 .noviolet {
   background-color: #ecf0f4 !important   ;
@@ -1781,18 +1682,7 @@ header,
 .v-card .v-toolbar__title {
   color: black;
 } */
-/* For all INPUT boxes */
-/* fieldset {
-  height: 30px;
-}
-input {
-  margin-top: -15px;
-}
-.v-input__append-inner {
-  margin-top: -2px;
-} */
 
-/* For all INPUT boxes */
 .input-small-fieldset fieldset {
   height: 30px;
 }
@@ -2114,50 +2004,7 @@ button {
   height: 830px;
   overflow-y: scroll;
 }
-.col-border-label {
-  position: absolute;
-  top: -9px;
-  background: #fff;
-  margin-left: -2px;
-  width: auto;
-  padding: 0px 7px;
-  color: black;
-}
-.div-border-label {
-  position: absolute;
-  top: 3px;
-  background: #fff;
-  margin-left: 5px;
-  width: auto;
-  padding: 0px 7px;
-  color: black;
-}
-.alarm-red-to-green {
-  animation: changeBackgroundColorRed 1s infinite;
-}
 
-@keyframes changeBackgroundColorRed {
-  0% {
-    color: green;
-  }
-  20% {
-    color: #f73030;
-  }
-
-  40% {
-    color: green;
-  }
-  60% {
-    color: #f73030;
-  }
-  80% {
-    color: green;
-  }
-
-  100% {
-    color: #f73030;
-  }
-}
 .alarm {
   animation: changeBackgroundColor 1s infinite;
 }
@@ -2208,16 +2055,6 @@ button {
 
 .no-border:before {
   border-color: #fff !important;
-}
-
-.small-custom-textbox .v-input__slot {
-  min-height: 30px !important;
-}
-.small-custom-textbox .v-label {
-  line-height: 11px !important;
-}
-.small-custom-textbox .v-input__icon {
-  height: 17px !important;
 }
 
 .global-search-textbox fieldset,
@@ -2398,255 +2235,18 @@ button {
     width: 100px !important;
   }
 }
-.gm-style-iw-ch {
-  padding-top: 10px !important;
-}
-.gm-ui-hover-effect span {
-  width: 13px !important;
-  height: 11px !important;
-  margin: 0px !important;
-}
-.gm-ui-hover-effect {
-  width: 21px !important;
-  height: 19px !important;
-}
 </style>
-
-<style scoped>
-label.v-label.v-label--active.v-label--is-disabled.theme--light {
-  color: red !important;
-}
-</style>
-
+<style scoped></style>
 <style>
-.empty-doughnut2 {
-  border: 20px solid rgb(150, 150, 150);
+.empty-doughnut1 {
+  border: 18px solid rgb(150, 150, 150);
   border-radius: 100px;
-  height: 130px;
-  width: 130px;
-  padding-top: 8px;
+  height: 110px;
+  width: 110px;
+  padding-top: 23px;
   padding-left: 2px;
-  font-size: 18px;
-  margin: auto;
-  line-height: 42px;
-  margin-top: 15px;
-  font-size: 16px;
-  color: #373d3f;
+  font-size: 14px;
+  margin-top: 8px;
 }
-
-/* .employee-schedule-search-box .v-input__append-inner {
-  background: red !important;
-  padding: 6px !important;
-  margin-top: 0px !important;
-  margin-right: -11px !important;
-  color: #fff !important;
-}
-.employee-schedule-search-box .v-icon {
-  color: #fff !important;
-} */
 </style>
-
 <!-- <link rel="stylesheet" href="../static/css/textbox-label-style.css" /> -->
-
-<style>
-.customer-tabs-right-line .v-tabs-slider-wrapper {
-  left: auto !important;
-  right: 0 !important;
-}
-.customer-tabs-right-line .v-slide-group__content {
-  width: 90px;
-  font-size: 9px !important;
-  min-width: 75px !important;
-}
-
-.customer-tab {
-  font-size: 9px !important;
-  min-width: 75px !important;
-}
-</style>
-
-<style>
-.customerEmergencyContactTabs .v-slide-group__content {
-  max-width: 100% !important;
-}
-.radiogroup {
-  color: black;
-}
-.radiogroup label {
-  color: black !important;
-}
-.v-radio--is-disabled label {
-  color: #ddd !important;
-}
-
-.alarm-notes-timeline .v-timeline-item__body {
-  max-width: 83% !important;
-}
-.alarm-notes-timeline .v-timeline-item__opposite {
-  max-width: 17% !important;
-}
-.alarm-notes-timeline
-  .v-application--is-ltr
-  .v-timeline:not(.v-timeline--dense):not(.v-timeline--reverse)::before {
-  left: 21% !important;
-}
-
-v-application .primary {
-  background-color: red !important;
-}
-
-.v-application--is-ltr
-  .v-timeline:not(.v-timeline--dense):not(.v-timeline--reverse)::before {
-  left: 21% !important;
-}
-.v-timeline-item__body > .v-card:not(.v-card--flat)::after {
-  border-right-color: black !important;
-}
-</style>
-
-<style>
-table {
-  border-collapse: collapse;
-  width: 100%;
-}
-td {
-  padding: 0;
-  margin: 0;
-}
-.v-timeline:not(.v-timeline--dense):not(.v-timeline--reverse)
-  .v-timeline-item--after,
-.v-timeline:not(.v-timeline--dense):not(.v-timeline--reverse)
-  .v-timeline-item:nth-child(odd):not(.v-timeline-item--before) {
-  flex-direction: row-reverse;
-}
-.v-timeline-item__body {
-  max-width: 80% !important;
-}
-.v-timeline-item__divider {
-  align-items: center;
-  display: flex;
-  justify-content: center;
-  min-width: 96px;
-  position: relative;
-}
-
-.v-timeline-item__dot {
-  z-index: 2;
-  border-radius: 50%;
-  box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2),
-    0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
-  height: 38px;
-  left: calc(50% - 19px);
-  width: 38px;
-}
-.v-application--is-ltr
-  .v-timeline:not(.v-timeline--dense):not(.v-timeline--reverse)
-  .v-timeline-item--after
-  .v-timeline-item__opposite,
-.v-application--is-ltr
-  .v-timeline:not(.v-timeline--dense):not(.v-timeline--reverse)
-  .v-timeline-item:nth-child(odd):not(.v-timeline-item--before)
-  .v-timeline-item__opposite {
-  text-align: right;
-}
-.v-timeline-item__opposite {
-  max-width: 24% !important;
-}
-.v-timeline-item__opposite {
-  align-self: center;
-  flex: 1 1 auto;
-  max-width: calc(50% - 48px);
-}
-.theme--light.v-timeline .v-timeline-item__dot {
-  background: #fff;
-}
-.v-timeline-item__dot {
-  border-radius: 50%;
-  box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14),
-    0 1px 3px 0 rgba(0, 0, 0, 0.12);
-  height: 38px;
-  left: calc(50% - 19px);
-  width: 38px;
-  z-index: 2;
-}
-.v-timeline-item--fill-dot .v-timeline-item__inner-dot {
-  height: inherit;
-  margin: 0;
-  width: inherit;
-}
-.v-application .white {
-  background-color: #fff !important;
-  border-color: #fff !important;
-}
-.v-timeline-item__inner-dot {
-  align-items: center;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-}
-.v-avatar {
-  align-items: center;
-  border-radius: 50%;
-  display: inline-flex;
-  justify-content: center;
-  line-height: normal;
-  overflow: hidden;
-  position: relative;
-  text-align: center;
-  vertical-align: middle;
-}
-.v-icon.v-icon {
-  font-feature-settings: "liga";
-  align-items: center;
-  display: inline-flex;
-  font-size: 24px;
-  justify-content: center;
-  letter-spacing: normal;
-  line-height: 1;
-  position: relative;
-  text-indent: 0;
-  transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1), visibility 0s;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  user-select: none;
-  vertical-align: middle;
-}
-.mdi:before {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  display: inline-block;
-  font: normal normal normal 24px / 1 "Material Design Icons";
-  font-size: inherit;
-  line-height: inherit;
-  text-rendering: auto;
-}
-.v-icon.v-icon:after {
-  background-color: currentColor;
-  border-radius: 50%;
-  content: "";
-  display: inline-block;
-  height: 100%;
-  left: 0;
-  opacity: 0;
-  pointer-events: none;
-  position: absolute;
-  top: 0;
-  transform: scale(1.3);
-  transition: opacity 0.2s cubic-bezier(0.4, 0, 0.6, 1);
-  width: 100%;
-}
-.v-timeline::before {
-  bottom: 0;
-  content: "";
-  height: 100%;
-  position: absolute;
-  top: 0;
-  width: 2px;
-}
-</style>
-<style>
-.v-expansion-panel-header {
-  padding: 10px !important;
-  min-height: 30px !important;
-}
-</style>

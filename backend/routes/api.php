@@ -53,3 +53,5 @@ include('alarm/api_alarm.php');
 include('master.php');
 
 include 'alarm/api_technician.php';
+
+include 'guard/api_guard.php';

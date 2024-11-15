@@ -7,7 +7,7 @@
 
     <div style="text-align: center">
       <img
-        title="Alarm Control Panel - Xtremeguard"
+        title="Guard Tracking System - Xtremeguard"
         src="/logo22.png"
         style="width: 50px"
       />

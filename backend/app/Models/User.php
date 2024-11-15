@@ -49,7 +49,9 @@ class User extends Authenticatable
     }
     public function getProfilePictureAttribute($value)
     {
-        return asset('users/' . $this->picture);
+        if ($this->picture)
+            return asset('users/' . $this->picture);
+        else return null;
     }
 
     /**
