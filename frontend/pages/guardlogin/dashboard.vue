@@ -105,6 +105,7 @@ export default {
     date_to: null,
     refreshData: true,
     display_name: "",
+    recordOffline: false,
   }),
   computed: {},
   mounted() {
@@ -234,6 +235,8 @@ export default {
               recordToSync
             );
 
+            console.log("Response ", response);
+
             // Check response status and update sync status based on record id
             if (response.data.status) {
               // Find the original record in attendanceRecords by id
@@ -275,6 +278,9 @@ export default {
             }
           } catch (error) {
             console.error("Network error for record", record.id, error);
+
+            this.attendanceRecordsTable = [...this.attendanceRecords, record];
+            this.optimiseTable();
           }
         }
 
@@ -330,7 +336,8 @@ export default {
           const { message, serialNumber } = event;
 
           this.serial_number = serialNumber;
-
+          this.outputMessage += `<p>Adding Offline Record`;
+          this.recordOffline = true;
           this.addAttendance();
 
           // Display NFC tag's unique ID (UID)
@@ -425,6 +432,12 @@ export default {
       } finally {
         this.loading = false;
       }
+
+      // if (this.recordOffline) {
+      //   this.attendanceRecordsTable = [...this.attendanceRecordsTable, record];
+      //   this.optimiseTable();
+      //   this.recordOffline = false;
+      // }
     },
 
     optimiseTable() {
