@@ -7,10 +7,11 @@
       <v-row>
         <v-col>
           <v-btn color="primary" dense small @click="addAttendance()"
-            >Manual Entry Tag</v-btn
-          >
-          <v-btn dense small @click="startNFCScan" color="primary"
-            >Scan Now
+            >Manual Entry
+          </v-btn>
+
+          <v-btn class="mt-4" dense small @click="startNFCScan" color="primary"
+            >Scan
           </v-btn>
         </v-col>
         <v-col class="text-right">
@@ -39,7 +40,7 @@
           <v-data-table
             :loading="loading"
             :headers="headers"
-            :items="attendanceRecords"
+            :items="attendanceRecordsTable"
             :items-per-page="10"
             item-key="id"
             ><template v-slot:[`item.sno`]="{ item, index }">
@@ -47,6 +48,9 @@
             </template>
             <template v-slot:[`item.server_time`]="{ item, index }">
               {{ item.server_time ?? "---" }}
+            </template>
+            <template v-slot:[`item.nfc_location`]="{ item, index }">
+              {{ item.nfc_location ?? "---" }}
             </template>
             <template v-slot:[`item.sync_status`]="{ item }">
               <v-chip
@@ -77,8 +81,10 @@ export default {
       { text: "Server Time", value: "server_time" },
     ],
     attendanceRecords: [],
+    attendanceRecordsTable: [],
+
     serial_number: "",
-    nfc_location: "",
+    nfc_location: "---",
     outputMessage: "",
 
     dialogEventsList: false,
@@ -118,7 +124,7 @@ export default {
     // this.date_to = monthObj.last;
 
     this.serial_number = "1234";
-    this.nfc_location = "GATE1";
+    this.nfc_location = "---";
     setInterval(() => {
       this.syncWithServer();
     }, 1000 * 10);
@@ -134,7 +140,7 @@ export default {
         user_id: this.$auth.user.id,
         log_time: this.getNowDateformat(),
         serial_number: this.serial_number,
-        nfc_location: this.nfc_location,
+        nfc_location: "---",
       });
     },
     loadLocalAttendance() {
@@ -186,7 +192,7 @@ export default {
       this.totalRecords = this.attendanceRecords.length;
       this.outputMessage = "Log Recorded ";
       this.syncWithServer();
-
+      this.getDatafromApi();
       this.loading = false;
     },
     async syncWithServer() {
@@ -196,6 +202,11 @@ export default {
         const unsyncedRecords = this.attendanceRecords.filter(
           (record) => record.sync_status === "Pending"
         );
+        if (unsyncedRecords.length == 0) {
+          this.outputMessage = "All logs are updated ";
+
+          localStorage.removeItem("attendanceRecords");
+        }
 
         for (const record of unsyncedRecords) {
           const recordToSync = {
@@ -224,6 +235,26 @@ export default {
                 this.outputMessage =
                   "Log updated to Server Successfully at  " +
                   originalRecord.server_time;
+
+                // Find the record index in attendanceRecords
+                const index = this.attendanceRecords.findIndex(
+                  (r) => r.id === record.id
+                );
+
+                if (index !== -1) {
+                  // Remove record from the component's data
+                  this.attendanceRecords.splice(index, 1);
+
+                  // Save updated records back to localStorage
+                  localStorage.setItem(
+                    "attendanceRecords",
+                    JSON.stringify(this.attendanceRecords)
+                  );
+
+                  console.log(
+                    `Record ${record.id} synced and removed locally.`
+                  );
+                }
               }
             } else {
               console.error("Sync failed for record", record.id);
@@ -239,6 +270,8 @@ export default {
         console.error("Error syncing data:", error);
       }
       this.loading = false;
+
+      this.getDatafromApi();
     },
 
     updateOptions(options) {
@@ -349,7 +382,7 @@ export default {
           }));
 
           // Append the mapped records to the existing attendanceRecords
-          this.attendanceRecords = [
+          this.attendanceRecordsTable = [
             ...this.attendanceRecords,
             ...mappedRecords.filter(
               (newRecord) =>
@@ -358,14 +391,7 @@ export default {
                 )
             ),
           ];
-          // Remove duplicates based on log_time
-          this.attendanceRecords = this.attendanceRecords.filter(
-            (record, index, self) =>
-              index === self.findIndex((r) => r.log_time === record.log_time)
-          );
-          this.attendanceRecords.sort((a, b) => {
-            return new Date(b.log_time) - new Date(a.log_time); // Ascending order
-          });
+          this.optimiseTable();
         } else {
           console.warn("No records returned from the API.");
         }
@@ -374,6 +400,17 @@ export default {
         // this.outputMessage = "Failed to fetch guard tracking logs.";
       }
       this.loading = false;
+    },
+
+    optimiseTable() {
+      // Remove duplicates based on log_time
+      this.attendanceRecordsTable = this.attendanceRecordsTable.filter(
+        (record, index, self) =>
+          index === self.findIndex((r) => r.log_time === record.log_time)
+      );
+      this.attendanceRecordsTable.sort((a, b) => {
+        return new Date(b.log_time) - new Date(a.log_time); // Ascending order
+      });
     },
   },
 };

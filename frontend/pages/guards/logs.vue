@@ -119,11 +119,13 @@
           <div v-else>---</div>
         </template>
 
-        <template v-slot:item.device.device_name="{ item }">
-          <div :style="item.device.location ? 'color:green' : 'color: red;'">
+        <template v-slot:item.device.location="{ item }">
+          <div>
             {{ item.device ? caps(item.device.name) : "---" }} <br />
 
-            {{ item.device.location ? item.device.location : "---" }}
+            <div style="font-size: 10px">
+              {{ item.device.location ? item.device.location : "---" }}
+            </div>
           </div>
         </template>
       </v-data-table>
@@ -182,7 +184,7 @@ export default {
           sortable: false,
           filterable: true,
 
-          value: "device.name",
+          value: "device.location",
         },
 
         {
