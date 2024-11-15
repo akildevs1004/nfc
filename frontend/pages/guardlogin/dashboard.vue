@@ -337,32 +337,32 @@ export default {
 
           this.serial_number = serialNumber;
           this.outputMessage += `<p>Adding Offline Record`;
-          this.recordOffline = true;
+          //this.recordOffline = true;
           this.addAttendance();
 
-          // Display NFC tag's unique ID (UID)
-          this.outputMessage += `<p><strong>NFC Tag UID (Serial Number):</strong> ${serialNumber}</p>`;
+          // // Display NFC tag's unique ID (UID)
+          // this.outputMessage += `<p><strong>NFC Tag UID (Serial Number):</strong> ${serialNumber}</p>`;
 
-          // Loop through all records and display them
-          message.records.forEach((record, index) => {
-            this.outputMessage += `<h3>Record ${index + 1}</h3>`;
-            this.outputMessage += `<p>Record Type: ${record.recordType}</p>`;
+          // // Loop through all records and display them
+          // message.records.forEach((record, index) => {
+          //   this.outputMessage += `<h3>Record ${index + 1}</h3>`;
+          //   this.outputMessage += `<p>Record Type: ${record.recordType}</p>`;
 
-            // Decode the record data based on type
-            if (record.recordType === "text") {
-              const textDecoder = new TextDecoder();
-              this.outputMessage += `<p>Text: ${textDecoder.decode(
-                record.data
-              )}</p>`;
-            } else if (record.recordType === "url") {
-              const url = new TextDecoder().decode(record.data);
-              this.outputMessage += `<p>URL: ${url}</p>`;
-            } else {
-              // For other record types, display raw data as a fallback
-              const rawData = new TextDecoder().decode(record.data);
-              this.outputMessage += `<p>Data: ${rawData}</p>`;
-            }
-          });
+          //   // Decode the record data based on type
+          //   if (record.recordType === "text") {
+          //     const textDecoder = new TextDecoder();
+          //     this.outputMessage += `<p>Text: ${textDecoder.decode(
+          //       record.data
+          //     )}</p>`;
+          //   } else if (record.recordType === "url") {
+          //     const url = new TextDecoder().decode(record.data);
+          //     this.outputMessage += `<p>URL: ${url}</p>`;
+          //   } else {
+          //     // For other record types, display raw data as a fallback
+          //     const rawData = new TextDecoder().decode(record.data);
+          //     this.outputMessage += `<p>Data: ${rawData}</p>`;
+          //   }
+          // });
 
           // Optionally, stop scanning after reading a tag
           nfcReader.abort();
