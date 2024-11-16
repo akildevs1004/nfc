@@ -96,7 +96,7 @@ export default {
       { text: "Log Time", value: "log_time" },
 
       { text: "Server Status", value: "sync_status" },
-      { text: "Server Time", value: "server_time" },
+      // { text: "Server Time", value: "server_time" },
     ],
     localStorageRecordsCount: 0,
     attendanceRecords: [],
