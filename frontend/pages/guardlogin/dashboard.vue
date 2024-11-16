@@ -5,45 +5,37 @@
         <v-col> Welcome {{ display_name }}</v-col>
       </v-row>
       <v-row>
-        <v-col cols="6">
-          <v-btn @click="startNFCScan" color="primary"
+        <v-col cols="12">
+          <v-btn @click="startNFCScan" style="width: 100%" :color="btncolor"
             >Scan NFC Tag
-          </v-btn> </v-col
-        ><v-col cols="6" class="text-right">
-          <v-btn @click="syncWithServer" color="primary">
+          </v-btn>
+        </v-col>
+        <!--<v-col cols="6" class="text-right">
+           <v-btn @click="syncWithServer" color="primary">
             <v-icon dense @click="getDatafromApi()" color="white"
               >mdi-cached
             </v-icon>
             Update
-          </v-btn>
-        </v-col>
+          </v-btn> 
+        </v-col>-->
       </v-row>
-      <v-row>
-        <v-col>
-          <!-- <v-btn color="primary" dense small @click="addAttendance()"
+
+      <!-- <v-btn color="primary" dense small @click="addAttendance()"
             >Manual Entry
           </v-btn> -->
 
-          <!-- <v-btn class="mt-4" dense small @click="startNFCScan" color="primary"
+      <!-- <v-btn class="mt-4" dense small @click="startNFCScan" color="primary"
             >Scan
           </v-btn> -->
-        </v-col>
-        <v-col class="text-right">
-          <!-- <v-icon dense @click="getDatafromApi()" color="primary"
+
+      <!-- <v-icon dense @click="getDatafromApi()" color="primary"
             >mdi-cached
           </v-icon> -->
-          <!-- <v-btn dense small @click="syncWithServer" color="primary"
+      <!-- <v-btn dense small @click="syncWithServer" color="primary"
             >Update to Server</v-btn
           > -->
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col>
-          <div style="color: green" v-if="outputMessage">
-            <p v-html="outputMessage"></p>
-          </div>
-        </v-col>
-      </v-row>
+
+      <div><p style="color: green" v-html="outputMessage"></p></div>
       <!-- <v-row>
         <v-col style="color: green"
           >Log Recorded Successfully at 12:15 PM</v-col
@@ -90,6 +82,7 @@ export default {
   layout: "guardlogin",
   components: {},
   data: () => ({
+    btncolor: "primary",
     headers: [
       { text: "#", value: "sno" },
       { text: "NFC Location", value: "nfc_location" },
@@ -150,10 +143,11 @@ export default {
     setInterval(() => {
       this.syncWithServer();
       //this.startNFCScan();
-
-      const storedRecords = localStorage.getItem("attendanceRecords");
-      let attendanceRecords = storedRecords ? JSON.parse(storedRecords) : [];
-      this.localStorageRecordsCount = attendanceRecords.length;
+      // if (localStorage) {
+      //   const storedRecords = localStorage.getItem("attendanceRecords");
+      //   let attendanceRecords = storedRecords ? JSON.parse(storedRecords) : [];
+      //   this.localStorageRecordsCount = attendanceRecords.length;
+      // }
     }, 1000 * 15);
 
     this.getDatafromApi();
@@ -173,9 +167,11 @@ export default {
       });
     },
     loadLocalAttendance() {
-      const storedRecords = localStorage.getItem("attendanceRecords");
-      this.attendanceRecords = storedRecords ? JSON.parse(storedRecords) : [];
-      this.totalRecords = this.attendanceRecords.length;
+      if (localStorage) {
+        const storedRecords = localStorage.getItem("attendanceRecords");
+        this.attendanceRecords = storedRecords ? JSON.parse(storedRecords) : [];
+        this.totalRecords = this.attendanceRecords.length;
+      }
     },
     saveLocalAttendance() {
       this.attendanceRecords.sort((a, b) => {
@@ -233,8 +229,7 @@ export default {
         );
         if (unsyncedRecords.length == 0) {
           this.outputMessage = "All logs are updated ";
-
-          localStorage.removeItem("attendanceRecords");
+          if (localStorage) localStorage.removeItem("attendanceRecords");
         }
 
         for (const record of unsyncedRecords) {
@@ -276,15 +271,17 @@ export default {
                   // Remove record from the component's data
                   this.attendanceRecords.splice(index, 1);
 
-                  // Save updated records back to localStorage
-                  localStorage.setItem(
-                    "attendanceRecords",
-                    JSON.stringify(this.attendanceRecords)
-                  );
+                  if (localStorage) {
+                    // Save updated records back to localStorage
+                    localStorage.setItem(
+                      "attendanceRecords",
+                      JSON.stringify(this.attendanceRecords)
+                    );
 
-                  console.log(
-                    `Record ${record.id} synced and removed locally.`
-                  );
+                    console.log(
+                      `Record ${record.id} synced and removed locally.`
+                    );
+                  }
                 }
               }
             } else {
@@ -331,8 +328,7 @@ export default {
     async startNFCScan() {
       // Check if Web NFC API is supported
       if (!("NDEFReader" in window)) {
-        this.outputMessage =
-          "Web NFC Feature is not supported on this browser. ";
+        this.outputMessage = "Web NFC Feature is not supported  . ";
         return;
       }
       this.loading = true;
@@ -342,7 +338,9 @@ export default {
 
         // Start scanning for NFC tags
         await nfcReader.scan();
-        this.outputMessage = "NFC scan started. Tap an NFC tag to read data.";
+
+        this.btncolor = "yellow";
+        this.outputMessage = "NFC scan started. Tap an NFC tag .";
 
         // Event listener for successful NFC read
         nfcReader.onreading = (event) => {
@@ -380,6 +378,7 @@ export default {
 
           // Optionally, stop scanning after reading a tag
           nfcReader.abort();
+          this.btncolor = "primary";
           this.outputMessage += "<p>Scan stopped after reading tag.</p>";
         };
 

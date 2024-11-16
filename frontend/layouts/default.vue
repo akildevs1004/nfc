@@ -861,7 +861,7 @@ export default {
     if (this.$auth.user.user_type != "company") {
       try {
         if (window) {
-          alert("You have no Access to this page");
+          // alert("You have no Access to this page");
           if (this.$route.name != "logout") window.location.href = "../logout";
           //window.location.reload();
         }
