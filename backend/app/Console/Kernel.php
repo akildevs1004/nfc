@@ -29,12 +29,12 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
 
-        $schedule
-            ->command('task:alarm_device_sensor_logs_csv')
-            ->everyMinute()
-            ->appendOutputTo(storage_path("kernal_logs/" . date("d-M-Y") . "-alarm-device-sensor-logs-csv.log")); // 
+        // $schedule
+        //     ->command('task:alarm_device_sensor_logs_csv')
+        //     ->everyMinute()
+        //     ->appendOutputTo(storage_path("kernal_logs/" . date("d-M-Y") . "-alarm-device-sensor-logs-csv.log")); // 
 
-        /*------------------------ */
+        // /*------------------------ */
         $monthYear = date("M-Y");
 
 
@@ -46,33 +46,33 @@ class Kernel extends ConsoleKernel
             ->runInBackground()
         ;;
 
-        /*------------------------ */
-        $schedule->call(function () {
-            (new ApiAlarmDeviceTemperatureLogsController)->createAlarmEventsJsonFile();
-        })->everyMinute();
-        /*------------------------ */
+        // /*------------------------ */
+        // $schedule->call(function () {
+        //     (new ApiAlarmDeviceTemperatureLogsController)->createAlarmEventsJsonFile();
+        // })->everyMinute();
+        // /*------------------------ */
 
 
 
-        /*------------------------ */
-        $schedule->call(function () {
-            (new AlramEventsController)->verifyOfflineDevices();
-        })->everyMinute();
+        // /*------------------------ */
+        // $schedule->call(function () {
+        //     (new AlramEventsController)->verifyOfflineDevices();
+        // })->everyMinute();
 
 
-        /*------------------------ */
-        $schedule->call(function () {
-            return (new CustomersController)->verifyArmedDeviceWithShopTime();
-        })->everyMinute()
+        // /*------------------------ */
+        // $schedule->call(function () {
+        //     return (new CustomersController)->verifyArmedDeviceWithShopTime();
+        // })->everyMinute()
 
-            ->appendOutputTo(storage_path("kernal_logs/" . date("d-M-Y") . "-notification-armed-with-shop-time.log"));
+        //     ->appendOutputTo(storage_path("kernal_logs/" . date("d-M-Y") . "-notification-armed-with-shop-time.log"));
 
-        /*------------------------ */
-        $schedule->call(function () {
-            return (new CustomersController)->clearDeviceNotification();
-        })->dailyAt('00:00')
+        // /*------------------------ */
+        // $schedule->call(function () {
+        //     return (new CustomersController)->clearDeviceNotification();
+        // })->dailyAt('00:00')
 
-            ->appendOutputTo(storage_path("kernal_logs/" . date("d-M-Y") . "-notification-armed-with-shop-time.log"));
+        //     ->appendOutputTo(storage_path("kernal_logs/" . date("d-M-Y") . "-notification-armed-with-shop-time.log"));
     }
 
     /**
