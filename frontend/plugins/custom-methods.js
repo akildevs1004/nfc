@@ -234,6 +234,14 @@ export default ({ app }, inject) => {
         u.user_type == "branch"
       );
     },
+    convertTo12HourFormat(time) {
+      if (!time) return "---";
+
+      const [hours, minutes, seconds] = time.split(":");
+      const period = +hours >= 12 ? "PM" : "AM";
+      const adjustedHours = +hours % 12 || 12; // Converts '0' to '12' for midnight
+      return `${String(adjustedHours).padStart(2, "0")}:${minutes} ${period}`;
+    },
 
     verifyDeviceSensorName(sensorName, devices) {
       for (let device of devices) {

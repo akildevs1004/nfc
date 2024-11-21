@@ -407,6 +407,14 @@
   },
   {
     "icon": "mdi-web-box",
+    "title": "Routes",
+    "open_menu": false,
+    "to": "/guards/routes",
+    "module": "settings",
+    "top_menu_name": "settings"
+  },
+  {
+    "icon": "mdi-web-box",
     "title": "Admin Users",
     "open_menu": false,
     "to": "/settings/users",
