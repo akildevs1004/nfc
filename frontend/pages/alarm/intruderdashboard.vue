@@ -137,7 +137,9 @@ export default {
     //   this.loadHourChart = true;
     // }, 1000 * 12);
   },
-  created() {},
+  created() {
+    this.$router.push("/settings");
+  },
   watch: {},
   methods: {
     can(per) {

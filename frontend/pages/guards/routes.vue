@@ -309,7 +309,6 @@ export default {
       returnContent += item.fri === true ? " F " : " -  ";
       returnContent += item.sat === true ? " S " : " -  ";
       returnContent += item.sun === true ? " S " : " -  ";
-      console.log(returnContent);
 
       return returnContent;
     },

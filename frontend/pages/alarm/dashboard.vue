@@ -98,6 +98,7 @@ export default {
     }, 1000 * 5);
   },
   created() {
+    this.$router.push("/settings");
     // this._id = this.$route.params.id;
     let today = new Date();
 
