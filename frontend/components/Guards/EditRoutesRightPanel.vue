@@ -7,10 +7,9 @@
     </div>
     <v-card class="elevation-2">
       <v-card-text>
+        <!-- <h4>Route Info</h4> -->
         <v-row>
-          <v-col
-            style="padding-left: 4px; padding-right: 4px; max-width: 150px"
-          >
+          <v-col cols="12" style="padding-left: 4px; padding-right: 4px">
             <v-text-field
               :disabled="!editable"
               label="Route Name"
@@ -20,7 +19,7 @@
               v-model="routeName"
             />
           </v-col>
-          <v-col>
+          <v-col cols="12" style="padding: 5px">
             <TimePickerCommon
               label="Start Time"
               :default_value="routeStartTime"
@@ -31,7 +30,7 @@
               "
             />
           </v-col>
-          <v-col>
+          <v-col cols="12" style="padding: 5px">
             <TimePickerCommon
               label="End Time"
               :default_value="routeEndTime"
@@ -100,6 +99,7 @@
           > -->
 
           <v-col
+            cols="12"
             style="padding-left: 4px; padding-right: 4px; max-width: 250px"
           >
             <v-select
@@ -132,43 +132,43 @@
         </v-row>
 
         <v-row>
-          <v-col>
+          <v-col cols="6" style="padding: 0px">
             <v-checkbox
               :disabled="!editable"
               v-model="monCheckbox"
               :label="`Mon`"
             ></v-checkbox> </v-col
-          ><v-col>
+          ><v-col cols="6" style="padding: 0px">
             <v-checkbox
               :disabled="!editable"
               v-model="tueCheckbox"
               :label="`Tue`"
             ></v-checkbox> </v-col
-          ><v-col>
+          ><v-col cols="6" style="padding: 0px">
             <v-checkbox
               :disabled="!editable"
               v-model="wedCheckbox"
               :label="`Wed`"
             ></v-checkbox> </v-col
-          ><v-col>
+          ><v-col cols="6" style="padding: 0px">
             <v-checkbox
               :disabled="!editable"
               v-model="thuCheckbox"
               :label="`Thu`"
             ></v-checkbox> </v-col
-          ><v-col>
+          ><v-col cols="6" style="padding: 0px">
             <v-checkbox
               :disabled="!editable"
               v-model="friCheckbox"
               :label="`Fri`"
             ></v-checkbox> </v-col
-          ><v-col>
+          ><v-col cols="6" style="padding: 0px">
             <v-checkbox
               :disabled="!editable"
               v-model="satCheckbox"
               :label="`Sat`"
             ></v-checkbox> </v-col
-          ><v-col>
+          ><v-col cols="6" style="padding: 0px">
             <v-checkbox
               :disabled="!editable"
               v-model="sunCheckbox"
@@ -176,8 +176,8 @@
             ></v-checkbox>
           </v-col>
         </v-row>
-        <v-row>
-          <v-col>
+        <!-- <v-row>
+          <v-col cols="12">
             <v-textarea
               outlined
               rows="1"
@@ -185,12 +185,11 @@
               v-model="routeNotes"
             ></v-textarea>
           </v-col>
-        </v-row>
+        </v-row> -->
       </v-card-text>
     </v-card>
-    <br />
-    <h4>Checkpoints</h4>
-    <br />
+
+    <h4 style="padding: 20px; padding-left: 0px">Checkpoints</h4>
 
     <v-row
       v-for="(d, index) in routeLocations"
@@ -238,7 +237,7 @@
           :items="oneTOsixty"
         ></v-select>
       </v-col> -->
-      <v-col style="padding: 4px">
+      <!-- <v-col style="padding: 4px">
         <v-text-field
           :disabled="!editable"
           label="Checkpoint Notes"
@@ -247,7 +246,7 @@
           dense
           v-model="d.notes"
         />
-      </v-col>
+      </v-col> -->
       <v-col style="max-width: 50px">
         <v-icon
           :disabled="!editable"
@@ -275,12 +274,12 @@
     </v-row>
 
     <v-row class="pr-3">
-      <v-col cols="10" class="text-right" style="color: red">
+      <v-col cols="12" class="text-right" style="color: red">
         <!-- <v-btn class="error" small @click="cancel">Cancel</v-btn> -->
         {{ errorMessage }}
       </v-col>
-      <v-col cols="2" class="text-right" v-if="editable">
-        <v-btn class="primary" small @click="save_device_info"
+      <v-col cols="12" class="text-right" v-if="editable">
+        <v-btn cols="12" class="primary" small @click="save_device_info"
           >{{ item ? "Update" : "Create" }}
         </v-btn>
       </v-col>
@@ -416,13 +415,22 @@ export default {
       if (this.item) {
         this.routeName = this.item.name;
 
-        this.routeStartHour =
-          this.item.start_time?.split(":")[0].trim() ?? "00";
-        this.routeStartMinute =
-          this.item.start_time?.split(":")[1].trim() ?? "00";
+        this.routeStartTime =
+          this.item.start_time?.split(":")[0] +
+          ":" +
+          this.item.start_time?.split(":")[1];
+        this.routeEndTime =
+          this.item.end_time?.split(":")[0] +
+          ":" +
+          this.item.end_time?.split(":")[1];
 
-        this.routeEndHour = this.item.end_time?.split(":")[0].trim() ?? "00";
-        this.routeEndMinute = this.item.end_time?.split(":")[1].trim() ?? "00";
+        // this.routeStartHour =
+        //   this.item.start_time?.split(":")[0].trim() ?? "00";
+        // this.routeStartMinute =
+        //   this.item.start_time?.split(":")[1].trim() ?? "00";
+
+        // this.routeEndHour = this.item.end_time?.split(":")[0].trim() ?? "00";
+        // this.routeEndMinute = this.item.end_time?.split(":")[1].trim() ?? "00";
         this.routeNotes = this.item.notes;
 
         this.monCheckbox = this.item.mon;

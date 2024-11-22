@@ -102,7 +102,7 @@ class RoutesController extends Controller
             "company_id" => "required",
             "route_checkpoints" => "required",
             "route_name" => "required",
-            "route_notes" => "required",
+            //"route_notes" => "required",
             "route_start_hour" => "required",
             "route_start_minute" => "required",
             "route_end_hour" => "required",

@@ -401,7 +401,7 @@
     "icon": "mdi-web-box",
     "title": "Guards",
     "open_menu": false,
-    "to": "/guards",
+    "to": "/guards/list",
     "module": "settings",
     "top_menu_name": "settings"
   },

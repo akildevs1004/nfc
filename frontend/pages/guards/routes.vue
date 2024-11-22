@@ -6,8 +6,35 @@
         {{ response }}
       </v-snackbar>
     </div>
+    <v-navigation-drawer
+      v-model="newSecurityDialog"
+      bottom
+      temporary
+      right
+      fixed
+      style="width: 250px"
+    >
+      <v-toolbar class="popup_background" dense>
+        {{ editId ? "Update" : "New" }} Checkpoint List
+        <v-spacer></v-spacer>
 
-    <v-dialog v-model="newSecurityDialog" max-width="800px">
+        <v-icon @click="newSecurityDialog = false" outlined dark>
+          mdi mdi-close-circle
+        </v-icon>
+      </v-toolbar>
+
+      <v-card>
+        <v-card-text>
+          <EditRoutesRightPanel
+            :key="key"
+            :editId="editId"
+            :item="item"
+            :editable="editable"
+            @closeDialog="closeSecurityDialog"
+        /></v-card-text>
+      </v-card>
+    </v-navigation-drawer>
+    <!-- <v-dialog v-model="newSecurityDialog" max-width="800px">
       <v-card>
         <v-card-title dark class="popup_background_noviolet">
           <span dense> {{ editId ? "Update" : "New" }} Checkpoint List</span>
@@ -26,7 +53,7 @@
           />
         </v-card-text>
       </v-card>
-    </v-dialog>
+    </v-dialog> -->
 
     <v-row>
       <v-col>
@@ -168,10 +195,12 @@
 
 <script>
 import EditRoutes from "../../components/Guards/EditRoutes.vue";
+import EditRoutesRightPanel from "../../components/Guards/EditRoutesRightPanel.vue";
 
 export default {
   components: {
     EditRoutes,
+    EditRoutesRightPanel,
   },
   data: () => ({
     dialogSecurityCustomers: false,
@@ -228,10 +257,10 @@ export default {
         text: "Checkpoints",
         value: "checkpoints",
       },
-      {
-        text: "Notes",
-        value: "notes",
-      },
+      // {
+      //   text: "Notes",
+      //   value: "notes",
+      // },
       {
         text: "Options",
         value: "options",
