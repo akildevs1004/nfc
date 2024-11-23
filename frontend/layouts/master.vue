@@ -290,7 +290,7 @@ export default {
       clipped: true,
 
       miniVariant: false,
-      title: "Guard Tracking System",
+      title: "Guard Patrolling System",
       logout_btn: {
         icon: "mdi-logout",
         label: "Logout",

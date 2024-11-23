@@ -7,7 +7,7 @@
 
     <div style="text-align: center">
       <img
-        title="Guard Tracking System - Xtremeguard"
+        title="Guard Patrolling System - Xtremeguard"
         src="/logo22.png"
         style="width: 50px"
       />

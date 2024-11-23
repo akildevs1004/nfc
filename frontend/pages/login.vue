@@ -126,7 +126,7 @@
             </div>
             <!-- <h3 class="pb-5 pt-0" style="font-size: 14px">
               Welcome To
-              <span style="font-size: 14px"> Guard Tracking System </span>
+              <span style="font-size: 14px"> Guard Patrolling System </span>
             </h3> -->
           </div>
           <div style="color: #fff; text-align: left" class="pt-10">

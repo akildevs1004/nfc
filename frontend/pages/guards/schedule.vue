@@ -58,11 +58,6 @@
 
       <v-card>
         <v-card-text>
-          <!-- <div style="position: absolute; top: 50%; left: -5px">
-            <v-icon @click="newSecurityDialog = false" color="red"
-              >mdi-arrow-right-bold-box</v-icon
-            >
-          </div> -->
           <EditRoutesRightPanel
             :key="key"
             :editId="editId"
@@ -72,33 +67,13 @@
         /></v-card-text>
       </v-card>
     </v-navigation-drawer>
-    <!-- <v-dialog v-model="newSecurityDialog" max-width="800px">
-      <v-card>
-        <v-card-title dark class="popup_background_noviolet">
-          <span dense> {{ editId ? "Update" : "New" }} Checkpoint List</span>
-          <v-spacer></v-spacer>
-          <v-icon @click="newSecurityDialog = false" outlined>
-            mdi mdi-close-circle
-          </v-icon>
-        </v-card-title>
-        <v-card-text>
-          <EditRoutes
-            :key="key"
-            :editId="editId"
-            :item="item"
-            :editable="editable"
-            @closeDialog="closeSecurityDialog"
-          />
-        </v-card-text>
-      </v-card>
-    </v-dialog> -->
 
     <v-row>
       <v-col>
         <v-card elevation="0" class="mt-2">
           <v-toolbar class="mb-2 white--text" color="white" dense flat>
             <v-toolbar-title>
-              <span style="color: black">Routes List </span></v-toolbar-title
+              <span style="color: black">Schedule List </span></v-toolbar-title
             >
             <!-- <v-tooltip top color="primary">
                 <template v-slot:activator="{ on, attrs }"> -->

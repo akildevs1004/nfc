@@ -127,7 +127,7 @@
                           <h3 class="pb-7 pt-15">
                             Welcome To
                             <span style="font-size: 20px">
-                              Guard Tracking System
+                              Guard Patrolling System
                             </span>
                           </h3>
                         </div>
@@ -251,9 +251,9 @@
                           color: #fff;
                         "
                       >
-                        <h3>About Guard Tracking System</h3>
+                        <h3>About Guard Patrolling System</h3>
                         <div style="font-weight: 300">
-                          Guard Tracking System is an innovative and
+                          Guard Patrolling System is an innovative and
                           comprehensive platform meticulously crafted to
                           redefine how organizations approach workforce
                           management. It serves as the ultimate solution,

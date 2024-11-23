@@ -128,7 +128,7 @@
       >
         <img
           class="logo-image"
-          title="Guard Tracking System - Xtremeguard"
+          title="Guard Patrolling System - Xtremeguard"
           :src="logo_src"
           style="width: 150px !important"
         />

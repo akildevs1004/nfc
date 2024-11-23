@@ -22,12 +22,22 @@ class RoutesController extends Controller
 
         $model->where("company_id", $request->company_id);
 
+
+        $model->when($request->filled("common_search"), function ($q) use ($request) {
+
+            $q->where(function ($q) use ($request) {
+                $q->orWhere("name", "ILIKE", "%$request->common_search%");
+                $q->orWhere("start_time", "ILIKE", "%$request->common_search%");
+                $q->orWhere("end_time", "ILIKE", "%$request->common_search%");
+            });
+        });
+
         // $model->when($request->filled("user_id"), function ($q) use ($request) {
         //     $q->where("user_id", $request->user_id);
         // });
 
 
-        return   $model->orderBy("name", "asc")->paginate($request->per_page ?? 10);
+        return   $model->orderBy("start_time", "asc")->paginate($request->per_page ?? 10);
     }
 
     /**

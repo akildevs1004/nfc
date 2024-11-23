@@ -129,7 +129,7 @@
       >
         <img
           class="logo-image"
-          title="Guard Tracking System - Xtremeguard"
+          title="Guard Patrolling System - Xtremeguard"
           :src="logo_src"
           style="width: 150px !important"
         />
@@ -553,13 +553,11 @@
 
     <v-main
       class="main_bg"
-      :style="
-        items.length == 0
-          ? 'padding-left:  0px;'
-          : miniVariant && items.length > 0
-          ? 'padding-left: 60px;'
-          : 'padding-left: 140px;'
-      "
+      :style="{
+        paddingTop: '30px',
+        paddingLeft:
+          items.length === 0 ? '0px' : miniVariant ? '60px' : '140px',
+      }"
     >
       <v-container style="max-width: 100%; padding-left: 5px">
         <nuxt />
@@ -843,7 +841,7 @@ export default {
       clipped: true,
 
       miniVariant: true,
-      title: "Guard Tracking System",
+      title: "Guard Patrolling System",
       socket: null,
       logout_btn: {
         icon: "mdi-logout",
@@ -1428,7 +1426,7 @@ export default {
         this.menuProperties[menu_name].selected = bgColor;
       }
 
-      console.log("menu_name", menu_name);
+      //console.log("menu_name", menu_name);
 
       // console.log(
       //   this.menuProperties,

@@ -398,7 +398,7 @@
     "top_menu_name": "alarm_reports"
   },
   {
-    "icon": "mdi-web-box",
+    "icon": "mdi-shield-account",
     "title": "Guards",
     "open_menu": false,
     "to": "/guards/list",
@@ -406,7 +406,7 @@
     "top_menu_name": "settings"
   },
   {
-    "icon": "mdi-web-box",
+    "icon": "mdi-map-clock",
     "title": "Routes",
     "open_menu": false,
     "to": "/guards/routes",
@@ -414,7 +414,15 @@
     "top_menu_name": "settings"
   },
   {
-    "icon": "mdi-web-box",
+    "icon": "mdi-account-clock",
+    "title": "Schedule",
+    "open_menu": false,
+    "to": "/guards/schedule",
+    "module": "settings",
+    "top_menu_name": "settings"
+  },
+  {
+    "icon": "mdi-account-tie",
     "title": "Admin Users",
     "open_menu": false,
     "to": "/settings/users",
@@ -422,7 +430,7 @@
     "top_menu_name": "settings"
   },
   {
-    "icon": "mdi-web-box",
+    "icon": "mdi-account-key",
     "title": "Roles",
     "open_menu": false,
     "to": "/settings/role",
@@ -430,7 +438,7 @@
     "top_menu_name": "settings"
   },
   {
-    "icon": "mdi-web-box",
+    "icon": "mdi-math-log",
     "title": "Web Logs",
     "open_menu": false,
     "to": "/web_login_logs",
@@ -438,7 +446,7 @@
     "top_menu_name": "settings"
   },
   {
-    "icon": "mdi-web-box",
+    "icon": "mdi-chart-box-multiple-outline",
     "title": "Guard Logs",
     "open_menu": false,
     "to": "/guards/logs",
